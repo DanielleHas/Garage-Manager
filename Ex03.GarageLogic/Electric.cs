@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Ex03.GarageLogic
 {
-    class Electric : EnergyType
+    class Electric// : EnergyType
     {
     }
 }

@@ -39,7 +39,7 @@ namespace Ex03.GarageLogic
                 {
                     m_CurAirPressure = m_MaxAirPressure;
                 }
-                else if (i_AirToAdd + m_CurAirPressure > m_MaxAirPressure || i_AirToAdd < 0)
+                else if (i_AirToAdd < 0 || i_AirToAdd + m_CurAirPressure > m_MaxAirPressure)
                 {
                     throw new ValueOutOfRangeException(0, m_MaxAirPressure);
                 }
@@ -49,13 +49,13 @@ namespace Ex03.GarageLogic
                 }
             }
 
-            private string toString()
+            private string ToString()
             {
-                string wheelToString = string.Format(@"Manufacturer Name:  {0}
-                                                        Maximum Air Pressure: {1}
-                                                        Current Air Pressure: {2}"
-                                                        , mr_ManufacturerName, m_MaxAirPressure, m_CurAirPressure);
-                return wheelToString;
+                string i_WheelDetails = string.Format(@"Manufacturer Name-  {0}
+                                                        Maximum Air Pressure- {1}
+                                                        Current Air Pressure- {2}"
+                                                        , this.mr_ManufacturerName, this.m_MaxAirPressure, this.m_CurAirPressure);
+                return i_WheelDetails;
             }
         }
 
@@ -65,36 +65,109 @@ namespace Ex03.GarageLogic
         protected readonly bool mvr_IsFuelBased;
         protected Wheel[] m_Wheels;
         protected float m_MaxAirPressure;
-        //protected readonly eFuelType mr_FuelType;
+        protected VehicleOwner m_VehicleOwner;
+        protected EnergyType m_EnergyType;
+        protected readonly eFuelTypes mr_FuelType;
+        protected readonly List<string> mr_ExtraFeaturesList;
 
-
-        internal Vehicle(string i_ModelName, string i_LicensePlateNumber, float i_RemainingEnergyPrecent, bool i_IsFuelBased, int i_NumOfWheels, float i_MaxAirPressure)
+        internal Vehicle(string i_ModelName, string i_LicensePlateNumber, VehicleOwner i_VehicleOwner, bool i_IsFuelBased, int i_NumOfWheels, eFuelTypes i_FuelType, float i_MaxAirPressure)
         {
             this.mr_ModelName = i_ModelName;
             this.mr_LicensePlateNumber = i_LicensePlateNumber;
-            this.m_RemainingEnergyPrecent = i_RemainingEnergyPrecent;
+          //  this.m_RemainingEnergyPrecent = i_RemainingEnergyPrecent;
             this.m_Wheels = new Wheel[i_NumOfWheels];
             this.m_MaxAirPressure = i_MaxAirPressure;
             this.mvr_IsFuelBased = i_IsFuelBased;
+            this.m_VehicleOwner = i_VehicleOwner;
+            this.mr_ExtraFeaturesList = new List<string>();
 
-            if(this.mvr_IsFuelBased)
+            if (this.mvr_IsFuelBased)
             {
-                //this.mr_FuelType = i_FuelType;
+                this.mr_FuelType = i_FuelType;
+            } 
+        }
+
+        internal bool IsFuelBased
+        {
+            get
+            {
+                return this.mvr_IsFuelBased;
             }
+        }
 
+        internal string LicensePlateNumber
+        {
+            get
+            {
+                return this.mr_LicensePlateNumber;
+            }
+        }
 
-            
+        internal Wheel[] Wheels
+        {
+            get
+            {
+                return this.m_Wheels;
+            }
+            set
+            {
+                this.m_Wheels = value;
+            }
+        }
+
+        internal int NumOfWheels
+        {
+            get
+            {
+                return this.m_Wheels.Length;
+            }
         }
 
         /*
          * Set each wheel of the vehicle
         */
-        internal void setWheels(string i_ManufacturerName, float i_CurAirPressure)
+        internal void SetWheels(string i_ManufacturerName, float i_CurAirPressure)
         {
             for(int i = 0; i < this.m_Wheels.Length; i++)
             {
                 this.m_Wheels[i] = new Wheel(i_ManufacturerName, i_CurAirPressure, this.m_MaxAirPressure);
             }
         }
+
+        internal abstract void SetEnergy(float i_CurEnergy);
+
+        /*
+        * Returns a string with the wheels details
+        */
+        private string WheelsDetails()
+        {
+            StringBuilder i_WheelsDetails = new StringBuilder();
+            int i_WheelIndex = 1;
+
+            foreach (Wheel wheel in this.m_Wheels)
+            {
+                i_WheelsDetails.Append("Wheel number " + i_WheelIndex + "- " + System.Environment.NewLine);
+                i_WheelsDetails.Append(wheel.ToString());
+                i_WheelIndex++;
+            }
+
+            return i_WheelsDetails.ToString();
+        }
+
+        internal virtual string ToString()
+        {
+            StringBuilder i_VehicleDetails = new StringBuilder();
+
+            i_VehicleDetails.Append("License plate number- " + this.mr_LicensePlateNumber + System.Environment.NewLine);
+            i_VehicleDetails.Append("Vehicle model- " + this.mr_ModelName + System.Environment.NewLine);
+            i_VehicleDetails.Append(this.m_VehicleOwner.toString() + System.Environment.NewLine);
+            i_VehicleDetails.Append("Wheels- " + System.Environment.NewLine);
+            i_VehicleDetails.Append(WheelsDetails());
+            i_VehicleDetails.Append(this.m_EnergyType.ToString());
+
+            return i_VehicleDetails.ToString();
+        }
+
+        
     }
 }

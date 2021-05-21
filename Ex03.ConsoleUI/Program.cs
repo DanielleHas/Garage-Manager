@@ -11,6 +11,7 @@ namespace Ex03.ConsoleUI
         public static void Main()
         {
             Console.Write("hiiii");
+            Console.ReadLine();
         }
     }
 }

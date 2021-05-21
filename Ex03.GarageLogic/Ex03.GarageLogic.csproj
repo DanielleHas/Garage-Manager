@@ -40,6 +40,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Car.cs" />
+    <Compile Include="Battery.cs" />
+    <Compile Include="eLicensTypes.cs" />
+    <Compile Include="eFuelTypes.cs" />
     <Compile Include="Electric.cs" />
     <Compile Include="EnergyType.cs" />
     <Compile Include="Fuel.cs" />
@@ -48,6 +51,7 @@
     <Compile Include="ValueOutOfRangeException.cs" />
     <Compile Include="Vehicle.cs" />
     <Compile Include="VehicleInGarage.cs" />
+    <Compile Include="VehicleOwner.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
