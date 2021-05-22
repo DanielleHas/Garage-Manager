@@ -18,7 +18,7 @@ namespace Ex03.GarageLogic
         internal override string ToString()
         {
             StringBuilder i_BatteryDetails = new StringBuilder();
-            i_BatteryDetails.Append("Energy type - Electric." + System.Environment.NewLine);
+            i_BatteryDetails.Append("Energy type - Electric" + System.Environment.NewLine);
             i_BatteryDetails.Append(base.ToString());
             return i_BatteryDetails.ToString();
         }
