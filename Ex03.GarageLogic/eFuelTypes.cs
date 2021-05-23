@@ -4,6 +4,6 @@
     {
         Octan95 = 1,
         Octan98 = 2,
-        Solar = 3,
+        Soler = 3,
     }
 }

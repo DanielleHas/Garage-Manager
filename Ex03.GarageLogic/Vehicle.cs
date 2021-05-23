@@ -51,11 +51,11 @@ namespace Ex03.GarageLogic
 
             private string ToString()
             {
-                string i_WheelDetails = string.Format(@"Manufacturer Name-  {0}
+                string io_WheelDetails = string.Format(@"Manufacturer Name-  {0}
                                                         Maximum Air Pressure- {1}
                                                         Current Air Pressure- {2}"
                                                         , this.mr_ManufacturerName, this.m_MaxAirPressure, this.m_CurAirPressure);
-                return i_WheelDetails;
+                return io_WheelDetails;
             }
         }
 
@@ -68,7 +68,8 @@ namespace Ex03.GarageLogic
         protected VehicleOwner m_VehicleOwner;
         protected EnergyType m_EnergyType;
         protected readonly eFuelTypes mr_FuelType;
-        protected readonly List<string> mr_ExtraFeaturesList;
+        protected eStatusInGarage m_CurStatus;
+        //protected readonly List<string> mr_ExtraFeaturesList;
 
         internal Vehicle(string i_ModelName, string i_LicensePlateNumber, VehicleOwner i_VehicleOwner, bool i_IsFuelBased, int i_NumOfWheels, eFuelTypes i_FuelType, float i_MaxAirPressure)
         {
@@ -79,7 +80,7 @@ namespace Ex03.GarageLogic
             this.m_MaxAirPressure = i_MaxAirPressure;
             this.mvr_IsFuelBased = i_IsFuelBased;
             this.m_VehicleOwner = i_VehicleOwner;
-            this.mr_ExtraFeaturesList = new List<string>();
+           // this.mr_ExtraFeaturesList = new List<string>();
 
             if (this.mvr_IsFuelBased)
             {
@@ -87,6 +88,18 @@ namespace Ex03.GarageLogic
             } 
         }
 
+        internal eStatusInGarage Status
+        {
+            get
+            {
+                return this.m_CurStatus;
+            }
+            set
+            {
+                this.m_CurStatus = value;
+            }
+        }
+        
         internal bool IsFuelBased
         {
             get
@@ -135,6 +148,7 @@ namespace Ex03.GarageLogic
         }
 
         internal abstract void SetEnergy(float i_CurEnergy);
+       // internal abstract void SetExtraFeatures(Dictionary<string, string> i_ExtraFeaturesDictionary);
 
         /*
         * Returns a string with the wheels details
