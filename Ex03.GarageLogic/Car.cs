@@ -15,14 +15,34 @@ namespace Ex03.GarageLogic
         private const float k_MaxCapacityOfBattery = 3.2f; //in hours
         private eColors m_Color;
         private eNumsOfDoors m_NumOfDoors;
-        private const string k_ExtraFearute1 = "Color"; //TODO: eFeatures.Color.ToString();
-        private const string k_ExtraFearute2 = "Numbe of doors"; //TODO: eFeatures.Num_Of_Doors.ToString();
+        private const string k_ExtraFearute1 = "Color";
+        private const string k_ExtraFearute2 = "Number of doors"; 
 
 
-        internal Car(string i_ModelName, string i_LicensePlateNumber, bool i_IsFuelBased, VehicleOwner i_VehicleOwner) : base(i_ModelName, i_LicensePlateNumber, i_VehicleOwner, i_IsFuelBased, k_NumOfWheels, k_FuelType, k_MaxAirPressure)
+        internal Car(string i_ModelName, string i_LicensePlateNumber, bool i_IsFuelBased, VehicleOwner i_VehicleOwner, Dictionary<string, string> i_ExtraFeatursDictionary) : base(i_ModelName, i_LicensePlateNumber, i_VehicleOwner, i_IsFuelBased, k_NumOfWheels, k_FuelType, k_MaxAirPressure)
         {
-           this.mr_ExtraFeaturesList.Add(k_ExtraFearute1);
-           this.mr_ExtraFeaturesList.Add(k_ExtraFearute2);
+            this.m_ExtraFeatursDictionary = i_ExtraFeatursDictionary; 
+            string o_Feature1Value;
+            string o_Feature2Value;
+            bool v_IsSucceed = this.m_ExtraFeatursDictionary.TryGetValue(k_ExtraFearute1, out o_Feature1Value);
+            if (v_IsSucceed)
+            {
+                SetColor(o_Feature1Value);
+            }
+            v_IsSucceed = this.m_ExtraFeatursDictionary.TryGetValue(k_ExtraFearute2, out o_Feature2Value);
+            if (v_IsSucceed)
+            {
+                SetNumOfDoors(o_Feature2Value);
+            }
+
+            if (i_IsFuelBased)
+           {
+               this.m_EnergyType = new Fuel(k_MaxCapacityOfFuel, 0, k_FuelType);
+           }
+           else
+           {
+               this.m_EnergyType = new Battery(k_MaxCapacityOfBattery, 0);
+           }
         }
 
         /*
@@ -88,11 +108,12 @@ namespace Ex03.GarageLogic
 
         internal override string ToString()
         {
-            string io_CarDetails = string.Format(@"{0}
-                                                   Color- {1}
-                                                   Number Of Doors- {2}"
-                                                 , base.ToString(), this.m_Color, this.m_NumOfDoors);
-            return io_CarDetails;
+            string carDetails = string.Format(@"
+                                {0}
+                                Color- {1}
+                                Number Of Doors- {2}"
+                                                 , base.ToString(), this.m_Color.ToString(), this.m_NumOfDoors.ToString());
+            return carDetails;
         }
     }
 }

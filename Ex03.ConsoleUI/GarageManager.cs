@@ -12,7 +12,6 @@ namespace Ex03.ConsoleUI
         private Garage m_MyGarage;
         private readonly float r_FillAirToMaxCode = -1.0F;
 
-
         internal GarageManager()
         {
             this.m_MyGarage = new Garage();
@@ -112,7 +111,16 @@ namespace Ex03.ConsoleUI
             ChatBot.GetVehicleGeneralDetails(out o_VehicleType, out o_ModelName, out o_IsFuelBased, out o_LicensePlateNumber);
             getAndSetOwnerNameAndPhoneNumber(out o_OwnerName, out o_OwnerPhoneNumber);
             getAndSetEnergySource(o_LicensePlateNumber);
+            bool v_IsFuelBased = o_IsFuelBased == 'F' || o_IsFuelBased == 'f' ? true : false;
+            Dictionary<string, string> extraFeatursDictionary = getExtraFeatures(o_VehicleType);
+            m_MyGarage.AddVehicle(o_VehicleType, o_ModelName, o_LicensePlateNumber, o_OwnerName, o_OwnerPhoneNumber, v_IsFuelBased, extraFeatursDictionary);
             getAndSetWheels(o_LicensePlateNumber);
+        }
+
+        private Dictionary<string, string> getExtraFeatures(int io_VehicleType)
+        {
+            Dictionary<string, string> extraFeatursDictionary = ChatBot.GetExtraFeatures(io_VehicleType);
+            return extraFeatursDictionary;
         }
 
         private void getAndSetOwnerNameAndPhoneNumber(out string o_OwnerName, out string o_OwnerPhoneNumber)

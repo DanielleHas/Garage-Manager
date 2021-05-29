@@ -29,10 +29,11 @@ namespace Ex03.GarageLogic
 
         internal override string ToString()
         {
-            StringBuilder i_FuelyDetails = new StringBuilder();
-            i_FuelyDetails.Append("Energy type - Fuel." + System.Environment.NewLine);
-            i_FuelyDetails.Append(base.ToString());
-            return i_FuelyDetails.ToString();
+            StringBuilder i_FuelDetails = new StringBuilder();
+            i_FuelDetails.Append("Energy type - Fuel." + System.Environment.NewLine);
+            i_FuelDetails.Append("Fuel type - " + mr_FuelType + System.Environment.NewLine);
+            i_FuelDetails.Append(base.ToString());
+            return i_FuelDetails.ToString();
         }
     }
 }

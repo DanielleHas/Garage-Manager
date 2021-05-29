@@ -19,11 +19,10 @@ namespace Ex03.GarageLogic
             this.m_PayedVehiclesInGarage = new Dictionary<string, Vehicle>();
         }
 
-        public void AddVehicle(int i_VehicleType, string i_ModelName, string i_LicensePlateNumber, string i_OwnerName, string i_OwnerPhoneNumber, bool i_IsFuelBased)
+        public void AddVehicle(int i_VehicleType, string i_ModelName, string i_LicensePlateNumber, string i_OwnerName, string i_OwnerPhoneNumber, bool i_IsFuelBased, Dictionary<string, string> i_ExtraFeatursDictionary)
         {
             Vehicle newVehicle;
             VehicleOwner vehicleOwner;
-            Dictionary<string, string> extraFeatures = null;
 
             if (IsExistInGarage(i_LicensePlateNumber))
             {
@@ -32,29 +31,28 @@ namespace Ex03.GarageLogic
             else
             {
                 vehicleOwner = new VehicleOwner(i_OwnerName, i_OwnerPhoneNumber);
-                newVehicle = CreateVehicle(i_VehicleType, i_ModelName, i_LicensePlateNumber, vehicleOwner, i_IsFuelBased);
+                newVehicle = CreateVehicle(i_VehicleType, i_ModelName, i_LicensePlateNumber, vehicleOwner, i_IsFuelBased, i_ExtraFeatursDictionary);
                 AddVehicleToStatusList(newVehicle, eStatusInGarage.Treatment);
-                extraFeatures = newVehicle.GetExtraFeaturs();
             }
         }
 
         /*
          * Creates a new vehicle according to the vehicle type
          */
-        internal static Vehicle CreateVehicle(int i_VehicleType, string i_ModelName, string i_LicensePlateNumber, VehicleOwner i_Owner, bool i_IsFuelBased)
+        internal static Vehicle CreateVehicle(int i_VehicleType, string i_ModelName, string i_LicensePlateNumber, VehicleOwner i_Owner, bool i_IsFuelBased, Dictionary<string, string> i_ExtraFeatursDictionary)
         {
             Vehicle io_NewVehicle = null;
 
             switch ((eVehicleTypes)(i_VehicleType))
             {
                 case eVehicleTypes.Car:
-                    io_NewVehicle = new Car(i_ModelName, i_LicensePlateNumber, i_IsFuelBased, i_Owner);
+                    io_NewVehicle = new Car(i_ModelName, i_LicensePlateNumber, i_IsFuelBased, i_Owner, i_ExtraFeatursDictionary);
                     break;
                 case eVehicleTypes.Motorcycle:
-                    io_NewVehicle = new Motorcycle(i_ModelName, i_LicensePlateNumber, i_IsFuelBased, i_Owner);
+                    io_NewVehicle = new Motorcycle(i_ModelName, i_LicensePlateNumber, i_IsFuelBased, i_Owner, i_ExtraFeatursDictionary);
                     break;
                 case eVehicleTypes.Truck:
-                    io_NewVehicle = new Truck(i_ModelName, i_LicensePlateNumber, i_IsFuelBased, i_Owner);
+                    io_NewVehicle = new Truck(i_ModelName, i_LicensePlateNumber, i_IsFuelBased, i_Owner, i_ExtraFeatursDictionary);
                     break;
             }
 
@@ -163,16 +161,16 @@ namespace Ex03.GarageLogic
          */
         public string GetVehicleDetails(string i_LicensePlateNumber)
         {
-            Vehicle i_Vehicle = SearchVehicle(i_LicensePlateNumber);
+            Vehicle vehicle = SearchVehicle(i_LicensePlateNumber);
             string io_VehicleDetails;
 
-            if (i_Vehicle == null)
+            if (vehicle == null)
             {
                 throw new VehicleNotInGarageException();
             }
             else
             {
-                io_VehicleDetails = i_Vehicle.ToString();
+                io_VehicleDetails = vehicle.ToString();
             }
 
             return io_VehicleDetails;
@@ -258,7 +256,7 @@ namespace Ex03.GarageLogic
             }
             else
             {
-                extraFeatures = curVehicle.GetExtraFeaturs();
+                extraFeatures = curVehicle.GetExtraFeatursDictionary();
             }
             return extraFeatures;
         }

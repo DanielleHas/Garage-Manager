@@ -18,10 +18,17 @@ namespace Ex03.GarageLogic
         private const string k_ExtraFearute1 = "Licens type"; //TODO: eFeatures.License_Type.ToString();
         private const string k_ExtraFearute2 = "Energy capacity"; //TODO: eFeatures.Engine_Capacity.ToString();
 
-        internal Motorcycle(string i_ModelName, string i_LicensePlateNumber, bool i_IsFuelBased, VehicleOwner i_VehicleOwner) : base(i_ModelName, i_LicensePlateNumber, i_VehicleOwner, i_IsFuelBased, k_NumOfWheels, k_FuelType, k_MaxAirPressure)
+        internal Motorcycle(string i_ModelName, string i_LicensePlateNumber, bool i_IsFuelBased, VehicleOwner i_VehicleOwner, Dictionary<string, string> i_ExtraFeatursDictionary) : base(i_ModelName, i_LicensePlateNumber, i_VehicleOwner, i_IsFuelBased, k_NumOfWheels, k_FuelType, k_MaxAirPressure)
         {
-            this.mr_ExtraFeaturesList.Add(k_ExtraFearute1);
-            this.mr_ExtraFeaturesList.Add(k_ExtraFearute2);
+            this.m_ExtraFeatursDictionary = i_ExtraFeatursDictionary;
+            if (i_IsFuelBased)
+            {
+                this.m_EnergyType = new Fuel(k_MaxCapacityOfFuel, 0, k_FuelType);
+            }
+            else
+            {
+                this.m_EnergyType = new Battery(k_MaxCapacityOfBattery, 0);
+            }
         }
 
         /*

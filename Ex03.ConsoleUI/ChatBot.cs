@@ -125,14 +125,14 @@ namespace Ex03.ConsoleUI
 
         internal static void GetVehicleGeneralDetails(out int o_VehicleType, out string o_ModelName, out char o_IsElectric, out string o_LicensePlateNumber)
         {
-            char isElectricOrFuel = 'F';
+            char isElectricOrFuel = 'F'; //F for fuel, E for electric
 
             Console.Clear();
             Console.WriteLine("Let's get some details about the vehicle.");
             o_VehicleType = getVehicleType();
             Console.WriteLine(string.Format("What is the {0}'s model?", (eVehicleTypes)o_VehicleType));
             o_ModelName = getInputFromUser();
-            if (o_VehicleType != 2)
+            if (o_VehicleType != 3)
             {
                 Console.WriteLine(string.Format("Is the {0} electric? Please choose E for electric and F for fuled", (eVehicleTypes)o_VehicleType));
                 isElectricOrFuel = getInputFromUser()[0];
@@ -146,6 +146,170 @@ namespace Ex03.ConsoleUI
 
             o_IsElectric = isElectricOrFuel;
             o_LicensePlateNumber = GetLicensePlateNumber();
+        }
+
+        internal static Dictionary<string, string> GetExtraFeatures(int i_VehicleType)
+        {
+            Dictionary<string, string> o_ExtraFeatursDictionary = new Dictionary<string, string>();
+            switch (i_VehicleType)
+            {
+                case 1: // car
+                    o_ExtraFeatursDictionary.Add("Color", getColor());
+                    o_ExtraFeatursDictionary.Add("Number of doors", getNumOfDoors());
+                    break;
+                case 2: //motorcycle
+                    o_ExtraFeatursDictionary.Add("Licens type", getLicensType());
+                    o_ExtraFeatursDictionary.Add("Energy capacity", getEnergyCapacity());
+                    break;
+                case 3: //Truck
+                    o_ExtraFeatursDictionary.Add("Has dangerous materials", getHasDangerousMaterials());
+                    o_ExtraFeatursDictionary.Add("Maximum carring weight", getMaximumCarringWeight());
+                    break;
+            }
+            return o_ExtraFeatursDictionary;
+        }
+
+        private static string getMaximumCarringWeight()
+        {
+            bool v_ValidCarringWeight = false;
+            string carringWeightAsString = "";
+            Console.WriteLine("Please enter the Maximum Carring Weight - ");
+            while (!v_ValidCarringWeight)
+            {
+                carringWeightAsString = getInputFromUser();
+                float o_CarringWeightAsFloat;
+                bool isSucceed = float.TryParse(carringWeightAsString, out o_CarringWeightAsFloat);
+                if (!isSucceed)
+                {
+                    Console.WriteLine("Invalid Number. Please enter again:");
+                }
+                else
+                {
+                    v_ValidCarringWeight = true;
+                }
+            }
+            return carringWeightAsString;
+        }
+
+        private static string getHasDangerousMaterials()
+        {
+            bool v_ValidInput = false;
+            string inputAsString = "";
+            Console.WriteLine("Do you carry dangeraus materials? (Y / N) - ");
+            while (!v_ValidInput)
+            {
+                inputAsString = getInputFromUser();
+                if (inputAsString.ToUpper() != "Y" && inputAsString.ToUpper() != "N")
+                {
+                    Console.WriteLine("Invalid input. Please enter again:");
+                }
+                else
+                {
+                    inputAsString = inputAsString.ToUpper();
+                    v_ValidInput = true;
+                }
+            }
+            return inputAsString;
+        }
+
+        private static string getEnergyCapacity()
+        {
+            bool v_ValidEnergyCapacity = false;
+            string energyCapacityAsString = "";
+            Console.WriteLine("Please enter the energy capacity - ");
+            while (!v_ValidEnergyCapacity)
+            {
+                energyCapacityAsString = getInputFromUser();
+                int o_EnergyCapacityAsInt;
+                bool isSucceed = Int32.TryParse(energyCapacityAsString, out o_EnergyCapacityAsInt);
+                if (!isSucceed)
+                {
+                    Console.WriteLine("Invalid Number. Please enter again:");
+                }
+                else
+                {
+                    v_ValidEnergyCapacity = true;
+                }
+            }
+            return energyCapacityAsString;
+        }
+
+        private static string getLicensType()
+        {
+            bool v_ValidLicenseType = false;
+            int licensTypeIndex = 1;
+            Console.WriteLine("Please enter your license type - ");
+            while (!v_ValidLicenseType)
+            {
+                Console.WriteLine(string.Format(@" 
+                             [1] - A
+                             [2] - B1
+                             [3] - AA
+                             [4] - BB"));
+                string licensTypeAsString = getInputFromUser();
+                licensTypeIndex = Int32.Parse(licensTypeAsString);
+                if (licensTypeIndex < 1 || licensTypeIndex > 4)
+                {
+                    Console.WriteLine("Invalid Number. Please enter again:");
+                }
+                else
+                {
+                    v_ValidLicenseType = true;
+                }
+            }
+            return ((eLicensTypes)(licensTypeIndex)).ToString();
+        }
+
+        private static string getNumOfDoors()
+        {
+            bool v_ValidDoorsNumber = false;
+            int doorsNumber = 2;
+            Console.WriteLine("Please enter the number of doors in the car - ");
+            while (!v_ValidDoorsNumber)
+            {
+                Console.WriteLine(string.Format(@" 
+                             [2] - 2
+                             [3] - 3
+                             [4] - 4
+                             [5] - 5"));
+                string doorsNumberAsString = getInputFromUser();
+                doorsNumber = Int32.Parse(doorsNumberAsString);
+                if (doorsNumber < 2 || doorsNumber > 5)
+                {
+                    Console.WriteLine("Invalid Number. Please enter again:");
+                }
+                else
+                {
+                    v_ValidDoorsNumber = true;
+                }
+            }
+            return ((eNumsOfDoors)(doorsNumber)).ToString();
+        }
+
+        private static string getColor()
+        {
+            bool v_ValidColor = false;
+            int colorIndex = 1;
+            Console.WriteLine("Please enter your car color plate number of the car - ");
+            while(!v_ValidColor)
+            {
+                Console.WriteLine(string.Format(@" 
+                             [1] - Red
+                             [2] - Silver
+                             [3] - White
+                             [4] - Black"));
+                string colorAsNumber = getInputFromUser();
+                colorIndex = Int32.Parse(colorAsNumber);
+                if (colorIndex < 1 || colorIndex > 4)
+                {
+                    Console.WriteLine("There is no such color. Please enter again:");
+                }
+                else
+                {
+                    v_ValidColor = true;
+                }
+            }
+            return ((eColors)(colorIndex)).ToString();            
         }
 
         internal static string GetLicensePlateNumber()

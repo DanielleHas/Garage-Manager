@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace Ex03.ConsoleUI
 {
-    class GarageRunner
+    public class GarageRunner
     {
         private GarageManager m_Manager;
 
         internal void Run()
         {
-            ChatBot chatbot;
+            ChatBot chatbot; //TODO 
             int instructionNum = 0;
             this.m_Manager = new GarageManager();
 

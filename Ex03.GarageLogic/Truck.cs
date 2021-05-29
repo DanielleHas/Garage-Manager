@@ -17,11 +17,13 @@ namespace Ex03.GarageLogic
         private float m_CarringWeight;
         private bool mv_HasDangerousMaterials;
 
-
-        internal Truck(string i_ModelName, string i_LicensePlateNumber, bool i_IsFuelBased, VehicleOwner i_VehicleOwner) : base(i_ModelName, i_LicensePlateNumber, i_VehicleOwner, i_IsFuelBased, k_NumOfWheels, k_FuelType, k_MaxAirPressure)
+        internal Truck(string i_ModelName, string i_LicensePlateNumber, bool i_IsFuelBased, VehicleOwner i_VehicleOwner, Dictionary<string, string> i_ExtraFeatursDictionary) : base(i_ModelName, i_LicensePlateNumber, i_VehicleOwner, i_IsFuelBased, k_NumOfWheels, k_FuelType, k_MaxAirPressure)
         {
-            this.mr_ExtraFeaturesList.Add(k_ExtraFearute1);
-            this.mr_ExtraFeaturesList.Add(k_ExtraFearute2);
+            this.m_ExtraFeatursDictionary = i_ExtraFeatursDictionary;
+            if (i_IsFuelBased)
+            {
+                this.m_EnergyType = new Fuel(k_MaxCapacityOfFuel, 0, k_FuelType);
+            }
         }
 
         /*
