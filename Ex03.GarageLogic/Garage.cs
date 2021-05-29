@@ -76,7 +76,7 @@ namespace Ex03.GarageLogic
 
         private Vehicle SearchVehicle(string i_LicensePlateNumber)
         {
-            Vehicle io_FoundedVehicle;
+            Vehicle io_FoundedVehicle = null;
             if (this.m_TreatmentVehiclesInGarage.TryGetValue(i_LicensePlateNumber, out io_FoundedVehicle)) ;
             else if (this.m_FixedVehiclesInGarage.TryGetValue(i_LicensePlateNumber, out io_FoundedVehicle)) ;
             else if (this.m_PayedVehiclesInGarage.TryGetValue(i_LicensePlateNumber, out io_FoundedVehicle)) ;
@@ -88,7 +88,7 @@ namespace Ex03.GarageLogic
             Vehicle i_vehicleToChange = SearchVehicle(i_LicensePlateNumber);
             if(i_vehicleToChange == null)
             {
-                // TODO: throw 
+                throw new VehicleNotInGarageException();
             }
             RemoveVehicleFromCurStatusList(i_vehicleToChange);
             AddVehicleToStatusList(i_vehicleToChange, eStatusInGarage.Treatment);
@@ -125,6 +125,132 @@ namespace Ex03.GarageLogic
                     break;
             }
         }
-    }
+
+        /*
+         * Returns a string with the details of all the vehicles
+         * Throws VehicleNotInGarageException when the vehicle isn't in the garage
+         */
+        private string GetVehicleDetails(string i_LicensePlateNumber)
+        {
+            Vehicle i_Vehicle = SearchVehicle(i_LicensePlateNumber);
+            string io_VehicleDetails;
+
+            if (i_Vehicle == null)
+            {
+                throw new VehicleNotInGarageException();
+            }
+            else
+            {
+                io_VehicleDetails = i_Vehicle.ToString();
+            }
+
+            return io_VehicleDetails;
+        }
+
+        /*
+         * Creates a string with all license plates of vehicles in a given state
+         */
+        private string GetVehiclesOfSameStatus(ref Dictionary<string, Vehicle> io_DictionaryOfVehiclesInStatus)
+        {
+            StringBuilder i_VehiclesWithSameStatus = new StringBuilder();
+
+            foreach (string i_LicensePlateNumber in io_DictionaryOfVehiclesInStatus.Keys)
+            {
+                i_VehiclesWithSameStatus.Append(i_LicensePlateNumber + ", ");
+            }
+
+            //TODO
+            // if (i_VehiclesWithSameStatus.Length > 0)
+            //{
+              //  i_VehiclesWithSameStatus.Remove(i_VehiclesWithSameStatus.Length - 2, 2);
+            //}
+
+            i_VehiclesWithSameStatus.Append(System.Environment.NewLine);
+
+            return i_VehiclesWithSameStatus.ToString();
+        }
+
+        /*
+          * Returns a string with the license plates in a given status.
+          * Receives a boolean array of size 3 representing the states(Treatment, Fixed, Payed).  
+          */
+        public string GetLicensePlatesByState(ref bool[] io_NecesseryStatuses)
+        {
+            StringBuilder i_VehiclesByStatus = new StringBuilder();
+
+            for (int i = 0; i < io_NecesseryStatuses.Length; i++)
+            {
+                if (io_NecesseryStatuses[i] == true)
+                {
+                    i_VehiclesByStatus.Append(((eStatusInGarage)(i + 1)).ToString() + "- ");
+                    //TODO i_VehiclesByStatus.Append(GetVehiclesOfSameStatus(ref this.m_ArrayOfStateDictionaries[i]));
+                    i_VehiclesByStatus.Append(System.Environment.NewLine);
+                }
+            }
+
+            return i_VehiclesByStatus.ToString();
+        }
+
+        public bool IsFuelBasedVehicle(string i_LicensePlateNumber)
+        {
+            Vehicle i_VehiclesByStatus = SearchVehicle(i_LicensePlateNumber);
+
+            if (i_VehiclesByStatus == null)
+            {
+                throw new VehicleNotInGarageException();
+            }
+
+            return i_VehiclesByStatus.IsFuelBased;
+        }
+
+        public eStatusInGarage GetStatusByLicensePlateNumber(string i_LicensePlateNumber)
+        {
+            Vehicle i_Vehicle = SearchVehicle(i_LicensePlateNumber);
+
+            if (i_Vehicle == null)
+            {
+                throw new VehicleNotInGarageException();
+            }
+
+            return i_Vehicle.Status;
+        }
+
+        /*
+         * Fills the fuel tank of a vehicle.
+         * Throws a VehicleNotInGarageException if the vehicle doesn't found
+         */
+        public void FillEnergy(string i_LicensePlateNumber, float i_EnergyToFill, eFuelTypes i_FuelType)
+        {
+            Vehicle i_VehicleToFill = SearchVehicle(i_LicensePlateNumber);
+
+            if (i_VehicleToFill == null)
+            {
+                throw new VehicleNotInGarageException();
+            }
+            else
+            {
+                i_VehicleToFill.FillEnergy(i_EnergyToFill, i_FuelType);
+            }
+        }
+
+        /*
+         * Fills the battery of a vehicle.
+         * Throws a VehicleNotInGarageException if the vehicle doesn't found
+         */
+        public void FillEnergy(string i_LicensePlateNumber, float i_EnergyToFill)
+        {
+            Vehicle i_VehicleToFill = SearchVehicle(i_LicensePlateNumber);
+
+            if (i_VehicleToFill == null)
+            {
+                throw new VehicleNotInGarageException();
+            }
+            else
+            {
+                i_VehicleToFill.FillEnergy(i_EnergyToFill);
+            }
+        }
 
     }
+
+}

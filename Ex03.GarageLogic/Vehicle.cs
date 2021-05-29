@@ -148,7 +148,24 @@ namespace Ex03.GarageLogic
         }
 
         internal abstract void SetEnergy(float i_CurEnergy);
-       // internal abstract void SetExtraFeatures(Dictionary<string, string> i_ExtraFeaturesDictionary);
+        // internal abstract void SetExtraFeatures(Dictionary<string, string> i_ExtraFeaturesDictionary);
+
+
+        /*
+         * Charges fueld-based vehicles 
+         */
+        internal void FillEnergy(float i_EnergyToFill, eFuelTypes i_FuelType)
+        {
+            (this.m_EnergyType as Fuel).FillIn(i_EnergyToFill, i_FuelType);
+        }
+
+        /*
+         * Charges electric vehicles
+         */
+        internal void FillEnergy(float i_EnergyToFill)
+        {
+            (this.m_EnergyType as Battery).FillIn(i_EnergyToFill);
+        }
 
         /*
         * Returns a string with the wheels details

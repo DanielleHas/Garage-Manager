@@ -1,10 +1,10 @@
 {
   "ExpandedNodes": [
     "",
+    "\\Ex03.ConsoleUI",
     "\\Ex03.GarageLogic",
-    "\\Ex03.GarageLogic\\bin\\Debug",
     "\\Garage Management System"
   ],
-  "SelectedNode": "\\Ex03.GarageLogic\\Fuel.cs",
+  "SelectedNode": "\\Ex03.ConsoleUI\\UserInstructions.cs",
   "PreviewInSolutionExplorer": false
 }
