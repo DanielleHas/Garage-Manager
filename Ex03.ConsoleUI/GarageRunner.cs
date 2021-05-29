@@ -6,11 +6,7 @@ using System.Threading.Tasks;
 
 namespace Ex03.ConsoleUI
 {
-    class Program
+    class GarageRunner
     {
-        public static void Main()
-        {
-            ChatBot.GreetUser();
-        }
     }
 }
