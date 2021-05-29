@@ -183,11 +183,21 @@ namespace Ex03.GarageLogic
                 if (io_NecesseryStatuses[i] == true)
                 {
                     i_VehiclesByStatus.Append(((eStatusInGarage)(i + 1)).ToString() + "- ");
-                    //TODO i_VehiclesByStatus.Append(GetVehiclesOfSameStatus(ref this.m_ArrayOfStateDictionaries[i]));
+                    switch (i + 1)
+                    {
+                        case 1:
+                            i_VehiclesByStatus.Append(GetVehiclesOfSameStatus(ref this.m_TreatmentVehiclesInGarage));
+                            break;
+                        case 2:
+                            i_VehiclesByStatus.Append(GetVehiclesOfSameStatus(ref this.m_FixedVehiclesInGarage));
+                            break;
+                        case 3:
+                            i_VehiclesByStatus.Append(GetVehiclesOfSameStatus(ref this.m_PayedVehiclesInGarage));
+                            break;
+                    }
                     i_VehiclesByStatus.Append(System.Environment.NewLine);
                 }
             }
-
             return i_VehiclesByStatus.ToString();
         }
 
