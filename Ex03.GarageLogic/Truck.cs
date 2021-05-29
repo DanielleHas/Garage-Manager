@@ -12,15 +12,16 @@ namespace Ex03.GarageLogic
         private const int k_MaxAirPressure = 26;
         private const eFuelTypes k_FuelType = eFuelTypes.Soler;
         private const float k_MaxCapacityOfFuel = 120f; //in liters
-        //private const string k_ExtraFearute1 = "Has dangerous materials"; //TODO: eFeatures.Has_Dangerous_Materials.ToString();
-        //private const string k_ExtraFearute2 = "Maximum carring wight"; //TODO: eFeatures.MaxCarringWeight.ToString();
+        private const string k_ExtraFearute1 = "Has dangerous materials"; //TODO: eFeatures.Has_Dangerous_Materials.ToString();
+        private const string k_ExtraFearute2 = "Maximum carring weight"; //TODO: eFeatures.MaxCarringWeight.ToString();
         private float m_CarringWeight;
+        private bool mv_HasDangerousMaterials;
 
 
         internal Truck(string i_ModelName, string i_LicensePlateNumber, bool i_IsFuelBased, VehicleOwner i_VehicleOwner) : base(i_ModelName, i_LicensePlateNumber, i_VehicleOwner, i_IsFuelBased, k_NumOfWheels, k_FuelType, k_MaxAirPressure)
         {
-            //this.mr_ExtraFeaturesList.Add(k_ExtraFearute1);
-            //this.mr_ExtraFeaturesList.Add(k_ExtraFearute2);
+            this.mr_ExtraFeaturesList.Add(k_ExtraFearute1);
+            this.mr_ExtraFeaturesList.Add(k_ExtraFearute2);
         }
 
         /*
@@ -31,17 +32,45 @@ namespace Ex03.GarageLogic
             this.m_EnergyType = new Fuel(k_MaxCapacityOfFuel, i_CurrentEnergy, k_FuelType);
         }
 
-        private void setCarringWeight(string i_CarringWeight)
+        private void SetCarringWeight(string i_CarringWeight)
         {
-            float io_CarringWeight;
-            if (float.TryParse(i_CarringWeight, out io_CarringWeight))
+            float o_CarringWeight;
+            if (float.TryParse(i_CarringWeight, out o_CarringWeight))
             {
-                this.m_CarringWeight = io_CarringWeight;
+                this.m_CarringWeight = o_CarringWeight;
             }
-            else if (io_CarringWeight < 0)
+            else if (o_CarringWeight < 0)
             {
                 throw new ArgumentException("You can set only a non negative number for the carring weight");
             }
+        }
+
+        private void SetDangerousMaterials(string i_HasDangerousMaterials)
+        {
+            if (i_HasDangerousMaterials.Equals('Y'))
+            {
+                this.mv_HasDangerousMaterials = true;
+
+            }
+            else
+            {
+                this.mv_HasDangerousMaterials = false;
+
+            } 
+        }
+
+        /*
+         * Sets the extra features that truck has. 
+         */
+        internal override void SetExtraFeatures(Dictionary<string, string> i_ExtraFeatures)
+        {
+            string o_CarringWeight;
+            string o_HasDangerousMaterials;
+
+            i_ExtraFeatures.TryGetValue(k_ExtraFearute1, out o_CarringWeight);
+            i_ExtraFeatures.TryGetValue(k_ExtraFearute2, out o_HasDangerousMaterials);
+            SetCarringWeight(o_CarringWeight) ;
+            SetDangerousMaterials(o_HasDangerousMaterials);
         }
 
         internal override string ToString()

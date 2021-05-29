@@ -49,13 +49,13 @@ namespace Ex03.GarageLogic
                 }
             }
 
-            private string ToString()
+            internal string ToString()
             {
-                string io_WheelDetails = string.Format(@"Manufacturer Name-  {0}
+                string wheelDetails = string.Format(@"Manufacturer Name-  {0}
                                                         Maximum Air Pressure- {1}
                                                         Current Air Pressure- {2}"
                                                         , this.mr_ManufacturerName, this.m_MaxAirPressure, this.m_CurAirPressure);
-                return io_WheelDetails;
+                return wheelDetails;
             }
         }
 
@@ -69,7 +69,7 @@ namespace Ex03.GarageLogic
         protected EnergyType m_EnergyType;
         protected readonly eFuelTypes mr_FuelType;
         protected eStatusInGarage m_CurStatus;
-        //protected readonly List<string> mr_ExtraFeaturesList;
+        protected readonly List<string> mr_ExtraFeaturesList;
 
         internal Vehicle(string i_ModelName, string i_LicensePlateNumber, VehicleOwner i_VehicleOwner, bool i_IsFuelBased, int i_NumOfWheels, eFuelTypes i_FuelType, float i_MaxAirPressure)
         {
@@ -80,7 +80,7 @@ namespace Ex03.GarageLogic
             this.m_MaxAirPressure = i_MaxAirPressure;
             this.mvr_IsFuelBased = i_IsFuelBased;
             this.m_VehicleOwner = i_VehicleOwner;
-           // this.mr_ExtraFeaturesList = new List<string>();
+            this.mr_ExtraFeaturesList = new List<string>();
 
             if (this.mvr_IsFuelBased)
             {
@@ -137,6 +137,22 @@ namespace Ex03.GarageLogic
         }
 
         /*
+         *Builds a dictionary with all the necessary values(as keys) for the specific requested kind of vehicle
+         * Initializes the values to be empty
+         */
+        internal Dictionary<string, string> GetExtraFeaturs()
+        {
+            Dictionary<string, string> extraFeaturesDictionary = new Dictionary<string, string>();
+
+            foreach (string extraFeature in this.mr_ExtraFeaturesList)
+            {
+                extraFeaturesDictionary.Add(extraFeature, "");
+            }
+
+            return extraFeaturesDictionary;
+        }
+
+        /*
          * Set each wheel of the vehicle
         */
         internal void SetWheels(string i_ManufacturerName, float i_CurAirPressure)
@@ -156,8 +172,7 @@ namespace Ex03.GarageLogic
         }
 
         internal abstract void SetEnergy(float i_CurEnergy);
-        // internal abstract void SetExtraFeatures(Dictionary<string, string> i_ExtraFeaturesDictionary);
-
+        internal abstract void SetExtraFeatures(Dictionary<string, string> i_ExtraFeaturesDictionary);
 
         /*
          * Charges fueld-based vehicles 
