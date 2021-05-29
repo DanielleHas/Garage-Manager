@@ -64,7 +64,19 @@ namespace Ex03.GarageLogic
             throw new NotImplementedException();
         }
 
-        private bool IsExistInGarage(string i_LicensePlateNumber)
+        public void SetWheels(string i_LicensePlateNumber, string i_ManufacturerName, float i_CurAirPressure)
+        {
+            Vehicle curVehicle = SearchVehicle(i_LicensePlateNumber);
+            curVehicle.SetWheels(i_ManufacturerName, i_CurAirPressure);
+        }
+
+        public void SetEnergy(string i_LicensePlateNumber, float i_CurEnergy)
+        {
+            Vehicle curVehicle = SearchVehicle(i_LicensePlateNumber);
+            curVehicle.SetEnergy(i_CurEnergy);
+        }
+
+        public bool IsExistInGarage(string i_LicensePlateNumber)
         {
             bool i_IsExist = true;
             if (SearchVehicle(i_LicensePlateNumber) == null)
@@ -83,7 +95,7 @@ namespace Ex03.GarageLogic
             return io_FoundedVehicle;
         }
 
-        private void ChangeVehicleStatus(string i_LicensePlateNumber, eStatusInGarage i_CurVehicleStatus)
+        public void ChangeVehicleStatus(string i_LicensePlateNumber, eStatusInGarage i_CurVehicleStatus)
         {
             Vehicle i_vehicleToChange = SearchVehicle(i_LicensePlateNumber);
             if(i_vehicleToChange == null)
@@ -183,12 +195,52 @@ namespace Ex03.GarageLogic
                 if (io_NecesseryStatuses[i] == true)
                 {
                     i_VehiclesByStatus.Append(((eStatusInGarage)(i + 1)).ToString() + "- ");
-                    //TODO i_VehiclesByStatus.Append(GetVehiclesOfSameStatus(ref this.m_ArrayOfStateDictionaries[i]));
+                    switch (i + 1)
+                    {
+                        case 1:
+                            i_VehiclesByStatus.Append(GetVehiclesOfSameStatus(ref this.m_TreatmentVehiclesInGarage));
+                            break;
+                        case 2:
+                            i_VehiclesByStatus.Append(GetVehiclesOfSameStatus(ref this.m_FixedVehiclesInGarage));
+                            break;
+                        case 3:
+                            i_VehiclesByStatus.Append(GetVehiclesOfSameStatus(ref this.m_PayedVehiclesInGarage));
+                            break;
+                    }
                     i_VehiclesByStatus.Append(System.Environment.NewLine);
                 }
             }
-
             return i_VehiclesByStatus.ToString();
+        }
+
+        public int GetNumOfWheelsInVehicle(string i_LicensePlateNumber)
+        {
+            int numberOfWheels = 0;
+
+            if (IsExistInGarage(i_LicensePlateNumber))
+            {
+                numberOfWheels = SearchVehicle(i_LicensePlateNumber).NumOfWheels;
+            }
+            else
+            {
+                numberOfWheels = 0;
+            }
+
+            return numberOfWheels;
+        }
+
+        public void FillAirInWheels(string i_LicensePlateNumber, float[] i_AmountOfAirToFill)
+        {
+            Vehicle curVehicle = SearchVehicle(i_LicensePlateNumber);
+
+            if (curVehicle == null)
+            {
+                throw new VehicleNotInGarageException();
+            }
+            else
+            {
+                curVehicle.FillAirInWheels(i_AmountOfAirToFill);
+            }
         }
 
         public bool IsFuelBasedVehicle(string i_LicensePlateNumber)

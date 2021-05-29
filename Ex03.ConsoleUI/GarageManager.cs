@@ -40,7 +40,7 @@ namespace Ex03.ConsoleUI
         internal void FillEnergyInVehicle()
         {
             bool chargedSuccessfully = false;
-            bool isElectricVehicle;
+            bool isFuelVehicle;
             float amountToFill = 0;
             eFuelTypes fuelType;
             string fuelTypeCode;
@@ -50,17 +50,17 @@ namespace Ex03.ConsoleUI
             {
                 try
                 {
-                    isElectricVehicle = this.m_MyGarage.CheckIfElectricByLicensePlate(licensePlateNumber);
-                    if (isElectricVehicle)
-                    {
-                        amountToFill = ChatBot.GetChargingDetails(licensePlateNumber);
-                        this.m_MyGarage.FillEnergySource(licensePlateNumber, amountToFill);
-                    }
-                    else
+                    isFuelVehicle = this.m_MyGarage.IsFuelBasedVehicle(licensePlateNumber);
+                    if (isFuelVehicle)
                     {
                         ChatBot.GetFuelingDetails(licensePlateNumber, out amountToFill, out fuelTypeCode);
                         eFuelTypes.TryParse(fuelTypeCode, out fuelType);
-                        this.m_MyGarage.FillEnergySource(licensePlateNumber, amountToFill, fuelType);
+                        this.m_MyGarage.FillEnergy(licensePlateNumber, amountToFill, fuelType);
+                    }
+                    else
+                    {
+                        amountToFill = ChatBot.GetChargingDetails(licensePlateNumber);
+                        this.m_MyGarage.FillEnergy(licensePlateNumber, amountToFill);
                     }
 
                     chargedSuccessfully = true;
@@ -91,7 +91,7 @@ namespace Ex03.ConsoleUI
 
             try
             {
-                eStatusInGarage vehicleState = this.m_MyGarage.GetStateByLicensePlate(licensePlateNumber);
+                eStatusInGarage vehicleState = this.m_MyGarage.GetStatusByLicensePlateNumber(licensePlateNumber);
                 Printer.PrintState(vehicleState, licensePlateNumber);
             }
             catch (VehicleNotInGarageException e)
@@ -102,26 +102,26 @@ namespace Ex03.ConsoleUI
 
         internal void AddNewVehicle()
         {
-            int vehicleType = 0;
-            string modelName;
-            string licensePlateNumber;
-            string ownerName;
-            string ownerPhoneNumber;
-            bool isElectric;
+            int o_VehicleType = 0;
+            string o_ModelName;
+            string o_LicensePlateNumber;
+            string o_OwnerName;
+            string o_OwnerPhoneNumber;
+            bool o_IsFuelBased;
             Dictionary<string, string> vehicleSpecialFeatures;
 
-            ChatBot.GetVehicleGeneralDetails(out vehicleType, out modelName, out isElectric, out licensePlateNumber);
-            getAndSetOwnerNameAndPhoneNumber(out ownerName, out ownerPhoneNumber);
-            vehicleSpecialFeatures = this.m_MyGarage.AddVehicle(vehicleType, modelName, isElectric, licensePlateNumber, ownerName, ownerPhoneNumber);
-            getAndSetEnergySource(licensePlateNumber);
-            getAndSetWheels(licensePlateNumber);
+            ChatBot.GetVehicleGeneralDetails(out o_VehicleType, out o_ModelName, out o_IsFuelBased, out o_LicensePlateNumber);
+            getAndSetOwnerNameAndPhoneNumber(out o_OwnerName, out o_OwnerPhoneNumber);
+            vehicleSpecialFeatures = this.m_MyGarage.AddVehicle(o_VehicleType, o_ModelName, o_IsFuelBased, o_LicensePlateNumber, ownerName, ownerPhoneNumber);
+            getAndSetEnergySource(o_LicensePlateNumber);
+            getAndSetWheels(o_LicensePlateNumber);
             if (vehicleSpecialFeatures == null)
             {
-                ChatBot.PrintVehicleAlreadyInGarage(licensePlateNumber);
+                ChatBot.PrintVehicleAlreadyInGarage(o_LicensePlateNumber);
             }
             else
             {
-                getAndSetSpecialFeatures(licensePlateNumber, ref vehicleSpecialFeatures);
+                getAndSetSpecialFeatures(o_LicensePlateNumber, ref vehicleSpecialFeatures);
             }
         }
 
@@ -197,16 +197,16 @@ namespace Ex03.ConsoleUI
             {
                 try
                 {
-                    if (this.m_MyGarage.CheckIfElectricByLicensePlate(i_LicensePlateNumber))
-                    {
-                        energyAmountInEnergySource = ChatBot.GetBatteryCurrentStatus(i_LicensePlateNumber);
-                    }
-                    else
+                    if (this.m_MyGarage.IsFuelBasedVehicle(i_LicensePlateNumber))
                     {
                         energyAmountInEnergySource = ChatBot.GetFuelTankCurrentStatus(i_LicensePlateNumber);
                     }
+                    else
+                    {
+                        energyAmountInEnergySource = ChatBot.GetBatteryCurrentStatus(i_LicensePlateNumber);
+                    }
 
-                    this.m_MyGarage.SetEnergySource(i_LicensePlateNumber, energyAmountInEnergySource);
+                    this.m_MyGarage.SetEnergy(i_LicensePlateNumber, energyAmountInEnergySource);
                     setSuccessfuly = true;
                 }
                 catch (ValueOutOfRangeException e)
@@ -242,14 +242,14 @@ namespace Ex03.ConsoleUI
 
             try
             {
-                numberOfWheels = this.m_MyGarage.GetNumberOfWheelsInSpecificVehicle(licensePlateNumber);
+                numberOfWheels = this.m_MyGarage.GetNumOfWheelsInVehicle(licensePlateNumber);
                 wheelsAirPressure = new float[numberOfWheels];
                 for (int i = 0; i < wheelsAirPressure.Length; i++)
                 {
                     wheelsAirPressure[i] = this.r_FillAirToMaxCode;
                 }
 
-                this.m_MyGarage.PumpWheels(licensePlateNumber, wheelsAirPressure);
+                this.m_MyGarage.FillAirInWheels(licensePlateNumber, wheelsAirPressure);
             }
             catch (VehicleNotInGarageException e)
             {
@@ -283,7 +283,7 @@ namespace Ex03.ConsoleUI
             string filteredLicensePlates;
 
             ChatBot.ChooseFilters(ref filters);
-            filteredLicensePlates = m_MyGarage.LicensePlatesByState(ref filters);
+            filteredLicensePlates = m_MyGarage.GetLicensePlatesByState(ref filters);
             Console.WriteLine(filteredLicensePlates);
         }
     }
