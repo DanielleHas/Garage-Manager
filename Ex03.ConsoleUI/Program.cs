@@ -10,6 +10,7 @@ namespace Ex03.ConsoleUI
     {
         public static void Main()
         {
+            GarageLogic.Garage myGarage = new GarageLogic.Garage(new Dictionary(), );
             ChatBot.GreetUser();
         }
     }

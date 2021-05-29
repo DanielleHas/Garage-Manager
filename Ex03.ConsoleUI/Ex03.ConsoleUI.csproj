@@ -44,6 +44,7 @@
   <ItemGroup>
     <Compile Include="ChatBot.cs" />
     <Compile Include="GarageManager.cs" />
+    <Compile Include="GarageRunner.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="UserInstructions.cs" />
   </ItemGroup>

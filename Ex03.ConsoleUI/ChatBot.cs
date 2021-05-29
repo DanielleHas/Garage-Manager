@@ -39,11 +39,13 @@ namespace Ex03.ConsoleUI
                              [6] - Charge an electric-based vehicle
                              [7] - Display vehicle information"));
         }
+
         internal static void GetOwnerName(out string o_Name)
         {
             Console.WriteLine("Please enter the owner's name");
             o_Name = getInputFromUser();
         }
+
         internal static void GetOwnerPhoneNumber(string i_Name, out string o_PhoneNumber)
         {
             Console.WriteLine(string.Format("Please enter {0}'s phone number (10 digit number without punctuations)", i_Name));
@@ -108,7 +110,38 @@ namespace Ex03.ConsoleUI
             string o_LicensePlateNumber = GetLicensePlateNumber();
         }
 
-        private static string GetLicensePlateNumber()
+        internal static void PrintVehicleAlreadyInGarage(string i_LicensePlateNumber)
+        {
+            Console.WriteLine(string.Format("Vehicle {0} is already listed in the garage. Moved to fixing state.", i_LicensePlateNumber);
+
+        }
+
+        internal static void GetVehicleGeneralDetails(out int o_VehicleType, out string o_ModelName, out char o_IsElectric, out string o_LicensePlateNumber)
+        {
+            char isElectricOrFuel = 'F';
+
+            Console.Clear();
+            Console.WriteLine("Now let's get some details about the vehicle.");
+            o_VehicleType = getVehicleType();
+            Console.WriteLine(string.Format("What is the {0}'s model?", (eVehicleTypes)o_VehicleType));
+            o_ModelName = getInputFromUser();
+            if (o_VehicleType != 2)
+            {
+                Console.WriteLine(string.Format("Is the {0} electric? (Y/N)", (eVehicleTypes)o_VehicleType));
+                isElectricOrFuel = getInputFromUser()[0];
+                while (isElectricOrFuel != 'F' && isElectricOrFuel != 'f' && isElectricOrFuel != 'E' && isElectricOrFuel != 'e')
+                {
+                    Console.Clear();
+                    Console.WriteLine("Please choose E for electric and F for fuled");
+                    isElectricOrFuel = getInputFromUser()[0];
+                }
+            }
+
+            o_IsElectric = isElectricOrFuel;
+            o_LicensePlateNumber = GetLicensePlateNumber();
+        }
+
+        internal static string GetLicensePlateNumber()
         {
             Console.WriteLine("Please enter the license plate number of the car ");
             string licensPlateNumber = getInputFromUser();
@@ -117,6 +150,11 @@ namespace Ex03.ConsoleUI
                 throw new FormatException(error);
             }
             return licensPlateNumber;
+        }
+
+        internal static void PrintLicensePlateNotFoundMessage(string i_LicensePlateNumber)
+        {
+            Console.WriteLine(string.Format("A vehicle with a license plate number matching your input - {0} does not exist in this garage.", i_LicensePlateNumber));
         }
 
         private static bool ParseLicensePlateNumber(string licensePlateNumber, out string o_Error)
@@ -160,6 +198,162 @@ namespace Ex03.ConsoleUI
                              [1] - Car
                              [2] - Motorcycle
                              [3] - Truck"));
+        }
+        internal static float GetBatteryCurrentStatus(string i_LicensePlateNumber)
+        {
+            float currentBatteryChargeInHours = 0;
+
+            Console.WriteLine(string.Format("What is the current battery charge of vehicle number {0}? (in hours)", i_LicensePlateNumber));
+            while (!float.TryParse(getInputFromUser(), out currentBatteryChargeInHours))
+            {
+                Console.WriteLine("Invalid input. Please enter the battery charge (in hours).");
+            }
+
+            return currentBatteryChargeInHours;
+        }
+
+        internal static float GetFuelTankCurrentStatus(string i_LicensePlateNumber)
+        {
+            float currentFuleTankStatusInLiters = 0;
+
+            Console.WriteLine(string.Format("What is the current tank status of vehicle {0}? (in liters)", i_LicensePlateNumber));
+            while (!float.TryParse(getInputFromUser(), out currentFuleTankStatusInLiters))
+            {
+                Console.Clear();
+                Console.WriteLine("Invalid input. Please enter the tank status (in liters) again.");
+            }
+
+            return currentFuleTankStatusInLiters;
+        }
+
+        internal static float GetChargingDetails(string i_LicensePlateNumber)
+        {
+            float chargeAmmount = 0;
+
+            Console.WriteLine(string.Format("How much time do you want to charge vehicle {0}? (in hours)", i_LicensePlateNumber));
+            while (!float.TryParse(getInputFromUser(), out chargeAmmount))
+            {
+                Console.Clear();
+                Console.WriteLine("Invalid input. Please enter the wanted charge time (in hours) again.");
+            }
+
+            return chargeAmmount;
+        }
+
+        internal static void GetFuelingDetails(string i_LicensePlateNumber, out float o_FuelAmount, out string o_FuelType)
+        {
+            float fuelAmount = 0;
+
+            o_FuelType = GetFuelType();
+            Console.WriteLine(string.Format("How many liters do you want to fuel into vehicle {0} with?", i_LicensePlateNumber));
+            while (!float.TryParse(getInputFromUser(), out fuelAmount))
+            {
+                Console.Clear();
+                Console.WriteLine("Invalid input. Please enter the wanted fuel amount (in liters) again.");
+            }
+
+            o_FuelAmount = fuelAmount;
+        }
+
+        internal static string GetFuelType()
+        {
+            string fuelType;
+            int fuelTypeCode = 0;
+
+            Console.WriteLine("What is the fuel type that you whould like to use?");
+            PrintFuelTypeOptions();
+            fuelType = getInputFromUser();
+            while (!int.TryParse(fuelType, out fuelTypeCode) || fuelTypeCode < 1 || fuelTypeCode > 4)
+            {
+                throw new FormatException("Bad fuel type input.");
+            }
+
+            return fuelType;
+        }
+
+        private static void PrintFuelTypeOptions()
+        {
+            Console.WriteLine(String.Format(@"[1] - Octan95
+                                              [2] - Octan96 
+                                              [3] - Octan98
+                                              [4] - Soler"));
+        }
+
+        internal static void GetWheelsManufacturer(string i_LicensePlateNumber, out string o_ManufacturerName)
+        {
+            Console.Clear();
+            Console.WriteLine(string.Format("What is the manufacturer's name for the wheels of vehicle {0}?", i_LicensePlateNumber));
+            o_ManufacturerName = getInputFromUser();
+        }
+
+        internal static float GetCurrentAirPressure(string i_LicensePlateNumber)
+        {
+            float currenAirPressure = 0;
+
+            Console.WriteLine(string.Format("What is the air pressure of the wheels in vehicle number {0}?", i_LicensePlateNumber));
+            while (!float.TryParse(getInputFromUser(), out currenAirPressure))
+            {
+                Console.Clear();
+                Console.WriteLine("Invalid input. Please enter the current air pressure again.");
+            }
+
+            return currenAirPressure;
+        }
+
+        internal static void ChooseFilters(ref bool[] io_FilterChart)
+        {
+            char userAnswer;
+            eStatusInGarage[] states = { eStatusInGarage.Treatment, eStatusInGarage.Fixed, eStatusInGarage.Payed };
+
+            Console.Clear();
+            for (int i = 0; i < states.Length; i++)
+            {
+                Console.WriteLine(string.Format("Would you like to see a list of the {0} cars? Y\\N", states[i]));
+                userAnswer = getInputFromUser()[0];
+                while (userAnswer != 'Y' && userAnswer != 'N' && userAnswer != 'n' && userAnswer != 'y')
+                {
+                    Console.WriteLine(string.Format("Invalid input. Please enter 'Y' if you would like to see {0}, and 'N' if you would't", states[i]));
+                    Console.WriteLine(string.Format("Would you like to see a list of the {0} cars? Y\\N", states[i]));
+                    userAnswer = getInputFromUser()[0];
+                }
+
+                io_FilterChart[i] = (userAnswer == 'Y' || userAnswer == 'y');
+            }
+        }
+
+        internal static string GetUpdatedState(string i_LicensePlateNumber)
+        {
+            string newState;
+            int newStateCode = 0;
+
+            Console.Clear();
+            Console.WriteLine(string.Format("What is the new state of vehicle {0}", i_LicensePlateNumber));
+            PrintStateOptions();
+            newState = getInputFromUser();
+            while (!int.TryParse(newState, out newStateCode) || newStateCode < 1 || newStateCode > 3)
+            {
+                Console.WriteLine("Invalid input. Please select the number corresponding to the chosen option:");
+                PrintStateOptions();
+                newState = getInputFromUser();
+                int.TryParse(newState, out newStateCode);
+            }
+
+            return newState;
+        }
+
+        internal static void PrintStateOptions()
+        {
+            Console.WriteLine("[1] - Ttreatment" + System.Environment.NewLine + "[2] - Fixed" + System.Environment.NewLine + "[3] - Payed" + System.Environment.NewLine);
+        }
+
+        internal static void PrintValueOutOfRangeMessage(float i_MaxValue, float i_MinValue)
+        {
+            Console.WriteLine(string.Format("The value you entered is not in the range, please enter a number between {0} and {1}", i_MinValue, i_MaxValue));
+        }
+
+        internal static void PrintFuelTypeErrorMessage(eFuelTypes i_FuelType)
+        {
+            Console.WriteLine(string.Format("The fuel type {0} does not match this vehicle type. Try again", i_FuelType));
         }
 
         private static string getInputFromUser()
