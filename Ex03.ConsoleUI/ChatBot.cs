@@ -314,7 +314,7 @@ namespace Ex03.ConsoleUI
 
         internal static string GetLicensePlateNumber()
         {
-            Console.WriteLine("Please enter the license plate number of the car ");
+            Console.WriteLine("Please enter the license plate number of the vehicle ");
             string licensPlateNumber = getInputFromUser();
             if (!ParseLicensePlateNumber(licensPlateNumber, out string error))
             {
@@ -492,27 +492,27 @@ namespace Ex03.ConsoleUI
             }
         }
 
-        internal static string GetUpdatedState(string i_LicensePlateNumber)
+        internal static string GetUpdatedStatus(string i_LicensePlateNumber)
         {
-            string newState;
-            int newStateCode = 0;
+            string newStatus;
+            int newStatusCode = 0;
 
             Console.Clear();
-            Console.WriteLine(string.Format("What is the new state of vehicle {0}", i_LicensePlateNumber));
-            PrintStateOptions();
-            newState = getInputFromUser();
-            while (!int.TryParse(newState, out newStateCode) || newStateCode < 1 || newStateCode > 3)
+            Console.WriteLine(string.Format("What is the new status of vehicle {0}", i_LicensePlateNumber));
+            PrintStatusOptions();
+            newStatus = getInputFromUser();
+            while (!int.TryParse(newStatus, out newStatusCode) || newStatusCode < 1 || newStatusCode > 3)
             {
                 Console.WriteLine("Invalid input. Please select the number corresponding to the chosen option:");
-                PrintStateOptions();
-                newState = getInputFromUser();
-                int.TryParse(newState, out newStateCode);
+                PrintStatusOptions();
+                newStatus = getInputFromUser();
+                int.TryParse(newStatus, out newStatusCode);
             }
 
-            return newState;
+            return newStatus;
         }
 
-        internal static void PrintStateOptions()
+        internal static void PrintStatusOptions()
         {
             Console.WriteLine("[1] - Ttreatment" + System.Environment.NewLine + "[2] - Fixed" + System.Environment.NewLine + "[3] - Payed" + System.Environment.NewLine);
         }

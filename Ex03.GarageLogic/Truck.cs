@@ -20,6 +20,18 @@ namespace Ex03.GarageLogic
         internal Truck(string i_ModelName, string i_LicensePlateNumber, bool i_IsFuelBased, VehicleOwner i_VehicleOwner, Dictionary<string, string> i_ExtraFeatursDictionary) : base(i_ModelName, i_LicensePlateNumber, i_VehicleOwner, i_IsFuelBased, k_NumOfWheels, k_FuelType, k_MaxAirPressure)
         {
             this.m_ExtraFeatursDictionary = i_ExtraFeatursDictionary;
+            string o_Feature1Value;
+            string o_Feature2Value;
+            bool v_IsSucceed = this.m_ExtraFeatursDictionary.TryGetValue(k_ExtraFearute1, out o_Feature1Value);
+            if (v_IsSucceed)
+            {
+                SetDangerousMaterials(o_Feature1Value);
+            }
+            v_IsSucceed = this.m_ExtraFeatursDictionary.TryGetValue(k_ExtraFearute2, out o_Feature2Value);
+            if (v_IsSucceed)
+            {
+                SetCarringWeight(o_Feature2Value);
+            }
             if (i_IsFuelBased)
             {
                 this.m_EnergyType = new Fuel(k_MaxCapacityOfFuel, 0, k_FuelType);
@@ -77,9 +89,21 @@ namespace Ex03.GarageLogic
 
         internal override string ToString()
         {
-            string io_TruckDetails = string.Format(@"{0}
-                                                        Current Carring Weight- {1}"
-                                                        , base.ToString(), this.m_CarringWeight);
+            string dangerousMaterialsDetails;
+            if (this.mv_HasDangerousMaterials)
+            {
+                dangerousMaterialsDetails = "Has dangeraus materials";
+            }
+            else
+            {
+                dangerousMaterialsDetails = "Doesn't have dangeraus materials";
+            }
+            string io_TruckDetails = string.Format(@"
+                                                    {0}
+                                                    Current Carring Weight- {1}
+                                                    {2}
+"
+                                                        , base.ToString(), this.m_CarringWeight, dangerousMaterialsDetails);
             return io_TruckDetails;
         }
     }

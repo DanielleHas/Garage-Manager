@@ -33,6 +33,7 @@ namespace Ex03.GarageLogic
                 vehicleOwner = new VehicleOwner(i_OwnerName, i_OwnerPhoneNumber);
                 newVehicle = CreateVehicle(i_VehicleType, i_ModelName, i_LicensePlateNumber, vehicleOwner, i_IsFuelBased, i_ExtraFeatursDictionary);
                 AddVehicleToStatusList(newVehicle, eStatusInGarage.Treatment);
+                newVehicle.Status = eStatusInGarage.Treatment;
             }
         }
 
@@ -112,7 +113,7 @@ namespace Ex03.GarageLogic
             return io_FoundedVehicle;
         }
 
-        public void ChangeVehicleStatus(string i_LicensePlateNumber, eStatusInGarage i_CurVehicleStatus)
+        public void ChangeVehicleStatus(string i_LicensePlateNumber, eStatusInGarage i_DesiredVehicleStatus)
         {
             Vehicle i_vehicleToChange = SearchVehicle(i_LicensePlateNumber);
             if(i_vehicleToChange == null)
@@ -120,7 +121,7 @@ namespace Ex03.GarageLogic
                 throw new VehicleNotInGarageException();
             }
             RemoveVehicleFromCurStatusList(i_vehicleToChange);
-            AddVehicleToStatusList(i_vehicleToChange, eStatusInGarage.Treatment);
+            AddVehicleToStatusList(i_vehicleToChange, i_DesiredVehicleStatus);
         }
 
         private void RemoveVehicleFromCurStatusList(Vehicle i_VehicleToRemove)

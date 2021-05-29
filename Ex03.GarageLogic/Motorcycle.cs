@@ -21,6 +21,18 @@ namespace Ex03.GarageLogic
         internal Motorcycle(string i_ModelName, string i_LicensePlateNumber, bool i_IsFuelBased, VehicleOwner i_VehicleOwner, Dictionary<string, string> i_ExtraFeatursDictionary) : base(i_ModelName, i_LicensePlateNumber, i_VehicleOwner, i_IsFuelBased, k_NumOfWheels, k_FuelType, k_MaxAirPressure)
         {
             this.m_ExtraFeatursDictionary = i_ExtraFeatursDictionary;
+            string o_Feature1Value;
+            string o_Feature2Value;
+            bool v_IsSucceed = this.m_ExtraFeatursDictionary.TryGetValue(k_ExtraFearute1, out o_Feature1Value);
+            if (v_IsSucceed)
+            {
+                SetLicensType(o_Feature1Value);
+            }
+            v_IsSucceed = this.m_ExtraFeatursDictionary.TryGetValue(k_ExtraFearute2, out o_Feature2Value);
+            if (v_IsSucceed)
+            {
+                SetEnergyCapacity(o_Feature2Value);
+            }
             if (i_IsFuelBased)
             {
                 this.m_EnergyType = new Fuel(k_MaxCapacityOfFuel, 0, k_FuelType);
@@ -49,7 +61,7 @@ namespace Ex03.GarageLogic
         internal void SetLicensType(String i_LicenseType)
         {
             eLicensTypes io_LicenseType;
-            if (!Enum.IsDefined(typeof(eLicensTypes), i_LicenseType))
+            if (Enum.IsDefined(typeof(eLicensTypes), i_LicenseType))
             {
                 if (eLicensTypes.TryParse(i_LicenseType, out io_LicenseType))
                 {
@@ -101,7 +113,7 @@ namespace Ex03.GarageLogic
             string io_CarDetails = string.Format(@"{0}
                                                    License Type - {1}
                                                    Energy Capacity- {2}"
-                                                 , base.ToString(), this.m_LicensType, this.m_EnergyCapacity);
+                                                 , base.ToString(), this.m_LicensType.ToString(), this.m_EnergyCapacity.ToString());
             return io_CarDetails;
         }
     }

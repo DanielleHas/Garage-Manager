@@ -30,16 +30,16 @@ namespace Ex03.ConsoleUI
                             this.m_Manager.ShowLicencePlatesInGarageByFilter();
                             break;
                         case 3:
-                            this.m_Manager.ChangeVehicleState();
+                            this.m_Manager.ChangeVehicleStatus();
                             break;
                         case 4:
                             this.m_Manager.InflateWheels();
                             break;
                         case 5:
-                            this.m_Manager.FillEnergyInVehicle(); 
+                            this.m_Manager.FillEnergyInVehicle(true); // For fuel
                             break;
                         case 6:
-                            this.m_Manager.FillEnergyInVehicle();
+                            this.m_Manager.FillEnergyInVehicle(false); // For electric
                             break;
                         case 7:
                             this.m_Manager.GetVehicleDetails();

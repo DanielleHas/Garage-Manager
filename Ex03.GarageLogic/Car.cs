@@ -34,7 +34,6 @@ namespace Ex03.GarageLogic
             {
                 SetNumOfDoors(o_Feature2Value);
             }
-
             if (i_IsFuelBased)
            {
                this.m_EnergyType = new Fuel(k_MaxCapacityOfFuel, 0, k_FuelType);
@@ -62,12 +61,12 @@ namespace Ex03.GarageLogic
 
         internal void SetColor(String i_Color)
         {
-            eColors io_Color;
-            if (!Enum.IsDefined(typeof(eColors), i_Color))
+            eColors o_Color;
+            if (Enum.IsDefined(typeof(eColors), i_Color))
             {
-                if (eColors.TryParse(i_Color, out io_Color))
+                if (eColors.TryParse(i_Color, out o_Color))
                 {
-                    this.m_Color = io_Color;
+                    this.m_Color = o_Color;
                 }
                 else
                 { 
@@ -78,12 +77,12 @@ namespace Ex03.GarageLogic
 
         internal void SetNumOfDoors(String i_NumOfDoors)
         {
-            eNumsOfDoors io_NumOfDoors;
-            if (!Enum.IsDefined(typeof(eNumsOfDoors), i_NumOfDoors))
+            eNumsOfDoors o_NumOfDoors;
+            if (Enum.IsDefined(typeof(eNumsOfDoors), i_NumOfDoors))
             {
-                if (eColors.TryParse(i_NumOfDoors, out io_NumOfDoors))
+                if (eColors.TryParse(i_NumOfDoors, out o_NumOfDoors))
                 {
-                    this.m_NumOfDoors = io_NumOfDoors;
+                    this.m_NumOfDoors = o_NumOfDoors;
                 }
                 else
                 { 

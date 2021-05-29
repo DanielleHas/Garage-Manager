@@ -36,7 +36,7 @@ namespace Ex03.ConsoleUI
             return licensePlateNumber;
         }
 
-        internal void FillEnergyInVehicle()
+        internal void FillEnergyInVehicle(bool isFuelRequired)
         {
             bool chargedSuccessfully = false;
             bool isFuelVehicle;
@@ -52,16 +52,31 @@ namespace Ex03.ConsoleUI
                     isFuelVehicle = this.m_MyGarage.IsFuelBasedVehicle(licensePlateNumber);
                     if (isFuelVehicle)
                     {
-                        ChatBot.GetFuelingDetails(licensePlateNumber, out amountToFill, out fuelTypeCode);
-                        eFuelTypes.TryParse(fuelTypeCode, out fuelType);
-                        this.m_MyGarage.FillEnergy(licensePlateNumber, amountToFill, fuelType);
+                        if (isFuelRequired)
+                        {
+                            ChatBot.GetFuelingDetails(licensePlateNumber, out amountToFill, out fuelTypeCode);
+                            eFuelTypes.TryParse(fuelTypeCode, out fuelType);
+                            this.m_MyGarage.FillEnergy(licensePlateNumber, amountToFill, fuelType);
+                        }
+                        else
+                        {
+                            Console.WriteLine("Your vehicle based on Fuel, please select option #5.");
+                        }
                     }
                     else
                     {
-                        amountToFill = ChatBot.GetChargingDetails(licensePlateNumber);
-                        this.m_MyGarage.FillEnergy(licensePlateNumber, amountToFill);
+                        if (!isFuelRequired)
+                        {
+                            amountToFill = ChatBot.GetChargingDetails(licensePlateNumber);
+                            this.m_MyGarage.FillEnergy(licensePlateNumber, amountToFill);
+                        }
+                        else
+                        {
+                            Console.WriteLine("Your vehicle based on Electric, please select option #6.");
+                        }
                     }
-
+                    Console.WriteLine("Please prees enter");
+                    Console.ReadLine();
                     chargedSuccessfully = true;
                 }
                 catch (VehicleNotInGarageException e)
@@ -193,17 +208,17 @@ namespace Ex03.ConsoleUI
             }
         }
 
-        internal void ChangeVehicleState()
+        internal void ChangeVehicleStatus()
         {
             string licensePlateNumber = getLicensePlateNumber();
-            string newStateCode;
-            eStatusInGarage newState;
+            string newStatusCode;
+            eStatusInGarage newStatus;
 
             try
             {
-                newStateCode = ChatBot.GetUpdatedState(licensePlateNumber);
-                eStatusInGarage.TryParse(newStateCode, out newState);
-                m_MyGarage.ChangeVehicleStatus(licensePlateNumber, newState);
+                newStatusCode = ChatBot.GetUpdatedStatus(licensePlateNumber);
+                eStatusInGarage.TryParse(newStatusCode, out newStatus);
+                m_MyGarage.ChangeVehicleStatus(licensePlateNumber, newStatus);
             }
             catch (VehicleNotInGarageException e)
             {
