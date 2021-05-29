@@ -33,7 +33,7 @@ namespace Ex03.GarageLogic
              * input = -1 to fill the wheel to its max air pressure
              * Throws ValueOutOfRangeException when the input is out of range
             */
-            private void inflate(float i_AirToAdd)
+            internal void FillAir(float i_AirToAdd)
             {
                 if (i_AirToAdd == -1)
                 {
@@ -144,6 +144,14 @@ namespace Ex03.GarageLogic
             for(int i = 0; i < this.m_Wheels.Length; i++)
             {
                 this.m_Wheels[i] = new Wheel(i_ManufacturerName, i_CurAirPressure, this.m_MaxAirPressure);
+            }
+        }
+
+        internal void FillAirInWheels(float[] i_AmountOfAir)
+        {
+            for (int i = 0; i < this.m_Wheels.Length; i++)
+            {
+                this.m_Wheels[i].FillAir(i_AmountOfAir[i]);
             }
         }
 

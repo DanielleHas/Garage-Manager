@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Ex03.ConsoleUI
 {
-    class ChatBot
+    public class ChatBot
     {
         internal static int GreetUser()
         {
@@ -48,13 +48,13 @@ namespace Ex03.ConsoleUI
         {
             Console.WriteLine(string.Format("Please enter {0}'s phone number (10 digit number without punctuations)", i_Name));
             o_PhoneNumber = getInputFromUser();
-            if (!parsePhoneNumber(o_PhoneNumber, out string error))
+            if (!ParsePhoneNumber(o_PhoneNumber, out string error))
             {
                 throw new FormatException(error);
             }
         }
 
-        private static bool parsePhoneNumber(string i_PhoneNumber, out string o_Error)
+        private static bool ParsePhoneNumber(string i_PhoneNumber, out string o_Error)
         {
             o_Error = null;
             bool successParsing = true;
@@ -108,7 +108,7 @@ namespace Ex03.ConsoleUI
             string o_LicensePlateNumber = GetLicensePlateNumber();
         }
 
-        private static string GetLicensePlateNumber()
+        public static string GetLicensePlateNumber()
         {
             Console.WriteLine("Please enter the license plate number of the car ");
             string licensPlateNumber = getInputFromUser();
