@@ -92,7 +92,7 @@ namespace Ex03.ConsoleUI
             try
             {
                 eStatusInGarage vehicleState = this.m_MyGarage.GetStatusByLicensePlateNumber(licensePlateNumber);
-                Printer.PrintState(vehicleState, licensePlateNumber);
+                ChatBot.PrintStatus(vehicleState, licensePlateNumber);
             }
             catch (VehicleNotInGarageException e)
             {
@@ -107,22 +107,12 @@ namespace Ex03.ConsoleUI
             string o_LicensePlateNumber;
             string o_OwnerName;
             string o_OwnerPhoneNumber;
-            bool o_IsFuelBased;
-            Dictionary<string, string> vehicleSpecialFeatures;
+            char o_IsFuelBased;
 
             ChatBot.GetVehicleGeneralDetails(out o_VehicleType, out o_ModelName, out o_IsFuelBased, out o_LicensePlateNumber);
             getAndSetOwnerNameAndPhoneNumber(out o_OwnerName, out o_OwnerPhoneNumber);
-            vehicleSpecialFeatures = this.m_MyGarage.AddVehicle(o_VehicleType, o_ModelName, o_IsFuelBased, o_LicensePlateNumber, ownerName, ownerPhoneNumber);
             getAndSetEnergySource(o_LicensePlateNumber);
             getAndSetWheels(o_LicensePlateNumber);
-            if (vehicleSpecialFeatures == null)
-            {
-                ChatBot.PrintVehicleAlreadyInGarage(o_LicensePlateNumber);
-            }
-            else
-            {
-                getAndSetSpecialFeatures(o_LicensePlateNumber, ref vehicleSpecialFeatures);
-            }
         }
 
         private void getAndSetOwnerNameAndPhoneNumber(out string o_OwnerName, out string o_OwnerPhoneNumber)
@@ -141,27 +131,6 @@ namespace Ex03.ConsoleUI
                 catch (FormatException e)
                 {
                     Console.WriteLine(e.Message);
-                }
-            }
-        }
-
-        private void getAndSetSpecialFeatures(string i_LicensePlateNumber, ref Dictionary<string, string> io_VehicleSpecialFeatures)
-        {
-            bool specialFeaturesSetSuccessfully = false;
-
-            ChatBot.GetVehicleSpecificDetails(ref io_VehicleSpecialFeatures);
-            while (!specialFeaturesSetSuccessfully)
-            {
-                try
-                {
-                    this.m_MyGarage.SetVehicleSpecialFeatures(i_LicensePlateNumber, ref io_VehicleSpecialFeatures);
-                    specialFeaturesSetSuccessfully = true;
-                }
-                catch (ArgumentException e)
-                {
-                    string[] errorMessages = e.Message.Split(':');
-                    ChatBot.PrintArgumentException(errorMessages[1]);
-                    ChatBot.GetVehicleSpecificDetail(ref io_VehicleSpecialFeatures, errorMessages[0]);
                 }
             }
         }

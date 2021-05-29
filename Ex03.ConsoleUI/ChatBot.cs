@@ -50,9 +50,11 @@ namespace Ex03.ConsoleUI
         {
             Console.WriteLine(string.Format("Please enter {0}'s phone number (10 digit number without punctuations)", i_Name));
             o_PhoneNumber = getInputFromUser();
-            if (!parsePhoneNumber(o_PhoneNumber, out string error))
+            try {
+                parsePhoneNumber(o_PhoneNumber, out string error);
+            } catch(Exception e)
             {
-                throw new FormatException(error);
+                Console.WriteLine(e);
             }
         }
 
@@ -69,12 +71,12 @@ namespace Ex03.ConsoleUI
             if (i_PhoneNumber.Length < 10)
             {
                 successParsing = false;
-                o_Error = "The number have to many digits";
+                o_Error = "The number is missing digits";
             }
             else if (i_PhoneNumber.Length > 10)
             {
                 successParsing = false;
-                o_Error = "The number is missing digits";
+                o_Error = "The number have to many digits";
             }
             return successParsing;
         }
@@ -90,7 +92,7 @@ namespace Ex03.ConsoleUI
             Console.WriteLine(string.Format("What is the {0}'s model?", (eVehicleTypes)o_VehicleType));
             string o_ModelName = getInputFromUser();
             char electricOrFuel = ' '; // temp variable
-            if (o_VehicleType != 3) //isn't a truck
+            if (o_VehicleType != 2) //isn't a truck
             {
                 Console.WriteLine(string.Format("Is the {0} electric? (press E for electric based and f for fuel based)", (eVehicleTypes)o_VehicleType));
                 electricOrFuel = getInputFromUser()[0];
@@ -110,9 +112,14 @@ namespace Ex03.ConsoleUI
             string o_LicensePlateNumber = GetLicensePlateNumber();
         }
 
+        internal static void PrintStatus(eStatusInGarage vehicleState, string licensePlateNumber)
+        {
+            Console.WriteLine(string.Format("The status of car number {0} is {1} ", licensePlateNumber, vehicleState));
+        }
+
         internal static void PrintVehicleAlreadyInGarage(string i_LicensePlateNumber)
         {
-            Console.WriteLine(string.Format("Vehicle {0} is already listed in the garage. Moved to fixing state.", i_LicensePlateNumber);
+            Console.WriteLine(string.Format("Vehicle {0} is already listed in the garage. Moved to fixing state.", i_LicensePlateNumber));
 
         }
 
@@ -121,13 +128,13 @@ namespace Ex03.ConsoleUI
             char isElectricOrFuel = 'F';
 
             Console.Clear();
-            Console.WriteLine("Now let's get some details about the vehicle.");
+            Console.WriteLine("Let's get some details about the vehicle.");
             o_VehicleType = getVehicleType();
             Console.WriteLine(string.Format("What is the {0}'s model?", (eVehicleTypes)o_VehicleType));
             o_ModelName = getInputFromUser();
             if (o_VehicleType != 2)
             {
-                Console.WriteLine(string.Format("Is the {0} electric? (Y/N)", (eVehicleTypes)o_VehicleType));
+                Console.WriteLine(string.Format("Is the {0} electric? Please choose E for electric and F for fuled", (eVehicleTypes)o_VehicleType));
                 isElectricOrFuel = getInputFromUser()[0];
                 while (isElectricOrFuel != 'F' && isElectricOrFuel != 'f' && isElectricOrFuel != 'E' && isElectricOrFuel != 'e')
                 {

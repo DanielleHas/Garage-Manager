@@ -67,12 +67,20 @@ namespace Ex03.GarageLogic
         public void SetWheels(string i_LicensePlateNumber, string i_ManufacturerName, float i_CurAirPressure)
         {
             Vehicle curVehicle = SearchVehicle(i_LicensePlateNumber);
+            if (curVehicle == null)
+            {
+                return;
+            }
             curVehicle.SetWheels(i_ManufacturerName, i_CurAirPressure);
         }
 
         public void SetEnergy(string i_LicensePlateNumber, float i_CurEnergy)
         {
             Vehicle curVehicle = SearchVehicle(i_LicensePlateNumber);
+            if (curVehicle == null)
+            {
+                return;
+            }
             curVehicle.SetEnergy(i_CurEnergy);
         }
 
@@ -142,7 +150,7 @@ namespace Ex03.GarageLogic
          * Returns a string with the details of all the vehicles
          * Throws VehicleNotInGarageException when the vehicle isn't in the garage
          */
-        private string GetVehicleDetails(string i_LicensePlateNumber)
+        public string GetVehicleDetails(string i_LicensePlateNumber)
         {
             Vehicle i_Vehicle = SearchVehicle(i_LicensePlateNumber);
             string io_VehicleDetails;
@@ -249,7 +257,7 @@ namespace Ex03.GarageLogic
 
             if (i_VehiclesByStatus == null)
             {
-                throw new VehicleNotInGarageException();
+                return false;
             }
 
             return i_VehiclesByStatus.IsFuelBased;
