@@ -21,19 +21,21 @@ namespace Ex03.GarageLogic
 
         public void AddVehicle(int i_VehicleType, string i_ModelName, string i_LicensePlateNumber, string i_OwnerName, string i_OwnerPhoneNumber, bool i_IsFuelBased)
         {
-            Vehicle i_NewVehicle;
-            VehicleOwner i_VehicleOwner;
+            Vehicle newVehicle;
+            VehicleOwner vehicleOwner;
+            Dictionary<string, string> extraFeatures = null;
 
-            if(IsExistInGarage(i_LicensePlateNumber))
+            if (IsExistInGarage(i_LicensePlateNumber))
             {
                 ChangeVehicleStatus(i_LicensePlateNumber, eStatusInGarage.Treatment);
             }
             else
             {
-                i_VehicleOwner = new VehicleOwner(i_OwnerName, i_OwnerPhoneNumber);
-                i_NewVehicle = CreateVehicle(i_VehicleType, i_ModelName, i_LicensePlateNumber, i_VehicleOwner, i_IsFuelBased);
-                AddVehicleToStatusList(i_NewVehicle, eStatusInGarage.Treatment);
-            }       
+                vehicleOwner = new VehicleOwner(i_OwnerName, i_OwnerPhoneNumber);
+                newVehicle = CreateVehicle(i_VehicleType, i_ModelName, i_LicensePlateNumber, vehicleOwner, i_IsFuelBased);
+                AddVehicleToStatusList(newVehicle, eStatusInGarage.Treatment);
+                extraFeatures = newVehicle.GetExtraFeaturs();
+            }
         }
 
         /*
@@ -59,7 +61,7 @@ namespace Ex03.GarageLogic
             return io_NewVehicle;
         }
 
-        private Vehicle setVehicle(string i_ModelName, string i_LicensePlateNumber, VehicleOwner i_VehicleOwner, bool i_IsFuelBased)
+        private Vehicle setVehicle(string i_ModelName, string i_LicensePlateNumber, VehicleOwner vehicleOwner, bool i_IsFuelBased)
         {
             throw new NotImplementedException();
         }
@@ -82,6 +84,15 @@ namespace Ex03.GarageLogic
                 return;
             }
             curVehicle.SetEnergy(i_CurEnergy);
+        }
+
+        /*
+         * Sets extra features to the vehicle
+         */
+        public void SetExtraFeaturesToVehicle(string i_LicensePlateNumber, ref Dictionary<string, string> io_ExtraFeaturesToSet)
+        {
+            Vehicle curVehicle = SearchVehicle(i_LicensePlateNumber);
+            curVehicle.SetExtraFeatures(io_ExtraFeaturesToSet);
         }
 
         public bool IsExistInGarage(string i_LicensePlateNumber)
@@ -130,9 +141,9 @@ namespace Ex03.GarageLogic
             }
         }
 
-        private void AddVehicleToStatusList(Vehicle i_VehicleToAdd, eStatusInGarage i_NewVehicleStatus)
+        private void AddVehicleToStatusList(Vehicle i_VehicleToAdd, eStatusInGarage newVehicleStatus)
         {
-            switch (i_NewVehicleStatus)
+            switch (newVehicleStatus)
             {
                 case eStatusInGarage.Treatment:
                     this.m_TreatmentVehiclesInGarage.Add(i_VehicleToAdd.LicensePlateNumber, i_VehicleToAdd);
@@ -191,9 +202,9 @@ namespace Ex03.GarageLogic
         }
 
         /*
-          * Returns a string with the license plates in a given status.
-          * Receives a boolean array of size 3 representing the states(Treatment, Fixed, Payed).  
-          */
+         * Returns a string with the license plates in a given status.
+         * Receives a boolean array of size 3 representing the states(Treatment, Fixed, Payed).  
+         */
         public string GetLicensePlatesByState(ref bool[] io_NecesseryStatuses)
         {
             StringBuilder i_VehiclesByStatus = new StringBuilder();
@@ -235,6 +246,21 @@ namespace Ex03.GarageLogic
             }
 
             return numberOfWheels;
+        }
+
+        public Dictionary<string, string> GetExtraFeatures(string i_LicensePlateNumber)
+        {
+            Vehicle curVehicle = SearchVehicle(i_LicensePlateNumber);
+            Dictionary<string, string> extraFeatures = null;
+            if (curVehicle == null)
+            {
+                throw new VehicleNotInGarageException();
+            }
+            else
+            {
+                extraFeatures = curVehicle.GetExtraFeaturs();
+            }
+            return extraFeatures;
         }
 
         public void FillAirInWheels(string i_LicensePlateNumber, float[] i_AmountOfAirToFill)

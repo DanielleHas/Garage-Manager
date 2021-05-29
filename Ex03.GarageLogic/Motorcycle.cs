@@ -15,15 +15,13 @@ namespace Ex03.GarageLogic
         private const float k_MaxCapacityOfBattery = 1.8f; //in hours
         private eLicensTypes m_LicensType;
         private int m_EnergyCapacity;
-        //private const string k_ExtraFearute1 = "Licens type"; //TODO: eFeatures.License_Type.ToString();
-        //private const string k_ExtraFearute2 = "Energy capacity"; //TODO: eFeatures.Engine_Capacity.ToString();
-
-
+        private const string k_ExtraFearute1 = "Licens type"; //TODO: eFeatures.License_Type.ToString();
+        private const string k_ExtraFearute2 = "Energy capacity"; //TODO: eFeatures.Engine_Capacity.ToString();
 
         internal Motorcycle(string i_ModelName, string i_LicensePlateNumber, bool i_IsFuelBased, VehicleOwner i_VehicleOwner) : base(i_ModelName, i_LicensePlateNumber, i_VehicleOwner, i_IsFuelBased, k_NumOfWheels, k_FuelType, k_MaxAirPressure)
         {
-            //this.mr_ExtraFeaturesList.Add(k_ExtraFearute1);
-            //this.mr_ExtraFeaturesList.Add(k_ExtraFearute2);
+            this.mr_ExtraFeaturesList.Add(k_ExtraFearute1);
+            this.mr_ExtraFeaturesList.Add(k_ExtraFearute2);
         }
 
         /*
@@ -75,6 +73,20 @@ namespace Ex03.GarageLogic
             {
                 this.m_EnergyCapacity = io_EnergyCapacity;
             }
+        }
+
+        /*
+         * Sets the extra features that motorcycle has. 
+         */
+        internal override void SetExtraFeatures(Dictionary<string, string> i_ExtraFeatures)
+        {
+            string o_LicenseType;
+            string o_EngineCapacity;
+
+            i_ExtraFeatures.TryGetValue(k_ExtraFearute1, out o_LicenseType);
+            i_ExtraFeatures.TryGetValue(k_ExtraFearute2, out o_EngineCapacity);
+            SetLicensType(o_LicenseType);
+            SetEnergyCapacity(o_EngineCapacity);
         }
 
         internal override string ToString()
