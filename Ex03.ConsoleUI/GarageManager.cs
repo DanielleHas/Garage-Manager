@@ -7,17 +7,35 @@ using System.Threading.Tasks;
 
 namespace Ex03.ConsoleUI
 {
-    class GarageManager
+    internal class GarageManager
     {
         private Garage m_MyGarage;
-        private readonly float r_FillAirToMaxCode = -1.0F;
+        private readonly float r_FillAirToMax = -1.0F;
 
         internal GarageManager()
         {
             this.m_MyGarage = new Garage();
         }
 
-        private string getLicensePlateNumber()
+        internal void AddNewVehicle()
+        {
+            int o_VehicleType = 0;
+            string o_ModelName;
+            string o_LicensePlateNumber;
+            string o_OwnerName;
+            string o_OwnerPhoneNumber;
+            char o_IsFuelBased;
+
+            ChatBot.GetVehicleGeneralDetails(out o_VehicleType, out o_ModelName, out o_IsFuelBased, out o_LicensePlateNumber);
+            SetOwnerDetails(out o_OwnerName, out o_OwnerPhoneNumber);
+            bool v_IsFuelBased = o_IsFuelBased == 'F' || o_IsFuelBased == 'f' ? true : false;
+            Dictionary<string, string> extraFeatursDictionary = GetExtraFeatures(o_VehicleType);
+            m_MyGarage.AddVehicle(o_VehicleType, o_ModelName, o_LicensePlateNumber, o_OwnerName, o_OwnerPhoneNumber, v_IsFuelBased, extraFeatursDictionary);
+            SetEnergyType(o_LicensePlateNumber);
+            SetWheels(o_LicensePlateNumber);
+        }
+
+        private string GetLicensePlateNumber()
         {
             string licensePlateNumber = ChatBot.GetLicensePlateNumber();
 
@@ -43,7 +61,7 @@ namespace Ex03.ConsoleUI
             float amountToFill = 0;
             eFuelTypes fuelType;
             string fuelTypeCode;
-            string licensePlateNumber = getLicensePlateNumber();
+            string licensePlateNumber = GetLicensePlateNumber();
 
             while (!chargedSuccessfully)
             {
@@ -99,9 +117,9 @@ namespace Ex03.ConsoleUI
             }
         }
 
-        internal void CheckVehicleState()
+        internal void CheckVehicleStatus()
         {
-            string licensePlateNumber = getLicensePlateNumber();
+            string licensePlateNumber = GetLicensePlateNumber();
 
             try
             {
@@ -114,42 +132,23 @@ namespace Ex03.ConsoleUI
             }
         }
 
-        internal void AddNewVehicle()
-        {
-            int o_VehicleType = 0;
-            string o_ModelName;
-            string o_LicensePlateNumber;
-            string o_OwnerName;
-            string o_OwnerPhoneNumber;
-            char o_IsFuelBased;
-
-            ChatBot.GetVehicleGeneralDetails(out o_VehicleType, out o_ModelName, out o_IsFuelBased, out o_LicensePlateNumber);
-            getAndSetOwnerNameAndPhoneNumber(out o_OwnerName, out o_OwnerPhoneNumber);
-            getAndSetEnergySource(o_LicensePlateNumber);
-            bool v_IsFuelBased = o_IsFuelBased == 'F' || o_IsFuelBased == 'f' ? true : false;
-            Dictionary<string, string> extraFeatursDictionary = getExtraFeatures(o_VehicleType);
-            m_MyGarage.AddVehicle(o_VehicleType, o_ModelName, o_LicensePlateNumber, o_OwnerName, o_OwnerPhoneNumber, v_IsFuelBased, extraFeatursDictionary);
-            getAndSetWheels(o_LicensePlateNumber);
-        }
-
-        private Dictionary<string, string> getExtraFeatures(int io_VehicleType)
+        private Dictionary<string, string> GetExtraFeatures(int io_VehicleType)
         {
             Dictionary<string, string> extraFeatursDictionary = ChatBot.GetExtraFeatures(io_VehicleType);
             return extraFeatursDictionary;
         }
 
-        private void getAndSetOwnerNameAndPhoneNumber(out string o_OwnerName, out string o_OwnerPhoneNumber)
+        private void SetOwnerDetails(out string o_OwnerName, out string o_OwnerPhoneNumber)
         {
-            bool phoneNumberSetSuccessfully = false;
-
+            bool isSuccessPhoneNumber = false;
             o_OwnerPhoneNumber = "";
             ChatBot.GetOwnerName(out o_OwnerName);
-            while (!phoneNumberSetSuccessfully)
+            while (!isSuccessPhoneNumber)
             {
                 try
                 {
                     ChatBot.GetOwnerPhoneNumber(o_OwnerName, out o_OwnerPhoneNumber);
-                    phoneNumberSetSuccessfully = true;
+                    isSuccessPhoneNumber = true;
                 }
                 catch (FormatException e)
                 {
@@ -158,20 +157,19 @@ namespace Ex03.ConsoleUI
             }
         }
 
-        private void getAndSetWheels(string i_LicensePlateNumber)
+        private void SetWheels(string i_LicensePlateNumber)
         {
             string manufacturerName;
-            float currentAirPressure = 0;
-            bool setSuccessfuly = false;
-
+            float curAirPressure = 0;
+            bool isSuccess = false;
             ChatBot.GetWheelsManufacturer(i_LicensePlateNumber, out manufacturerName);
-            while (!setSuccessfuly)
+            while (!isSuccess)
             {
                 try
                 {
-                    currentAirPressure = ChatBot.GetCurrentAirPressure(i_LicensePlateNumber);
-                    m_MyGarage.SetWheels(i_LicensePlateNumber, manufacturerName, currentAirPressure);
-                    setSuccessfuly = true;
+                    curAirPressure = ChatBot.GetCurAirPressure(i_LicensePlateNumber);
+                    m_MyGarage.SetWheels(i_LicensePlateNumber, manufacturerName, curAirPressure);
+                    isSuccess = true;
                 }
                 catch (ValueOutOfRangeException e)
                 {
@@ -180,26 +178,25 @@ namespace Ex03.ConsoleUI
             }
         }
 
-        private void getAndSetEnergySource(string i_LicensePlateNumber)
+        private void SetEnergyType(string i_LicensePlateNumber)
         {
-            bool setSuccessfuly = false;
-            float energyAmountInEnergySource = 0;
-
-            while (!setSuccessfuly)
+            bool isSuccess = false;
+            float energyAmount = 0;
+            while (!isSuccess)
             {
                 try
                 {
                     if (this.m_MyGarage.IsFuelBasedVehicle(i_LicensePlateNumber))
                     {
-                        energyAmountInEnergySource = ChatBot.GetFuelTankCurrentStatus(i_LicensePlateNumber);
+                        energyAmount = ChatBot.GetFuelCurStatus(i_LicensePlateNumber);
                     }
                     else
                     {
-                        energyAmountInEnergySource = ChatBot.GetBatteryCurrentStatus(i_LicensePlateNumber);
+                        energyAmount = ChatBot.GetBatteryCurStatus(i_LicensePlateNumber);
                     }
 
-                    this.m_MyGarage.SetEnergy(i_LicensePlateNumber, energyAmountInEnergySource);
-                    setSuccessfuly = true;
+                    this.m_MyGarage.SetEnergy(i_LicensePlateNumber, energyAmount);
+                    isSuccess = true;
                 }
                 catch (ValueOutOfRangeException e)
                 {
@@ -210,14 +207,14 @@ namespace Ex03.ConsoleUI
 
         internal void ChangeVehicleStatus()
         {
-            string licensePlateNumber = getLicensePlateNumber();
-            string newStatusCode;
+            string licensePlateNumber = GetLicensePlateNumber();
+            string newStatusAsString;
             eStatusInGarage newStatus;
 
             try
             {
-                newStatusCode = ChatBot.GetUpdatedStatus(licensePlateNumber);
-                eStatusInGarage.TryParse(newStatusCode, out newStatus);
+                newStatusAsString = ChatBot.GetUpdatedStatus(licensePlateNumber);
+                eStatusInGarage.TryParse(newStatusAsString, out newStatus);
                 m_MyGarage.ChangeVehicleStatus(licensePlateNumber, newStatus);
             }
             catch (VehicleNotInGarageException e)
@@ -228,7 +225,7 @@ namespace Ex03.ConsoleUI
 
         internal void InflateWheels()
         {
-            string licensePlateNumber = getLicensePlateNumber();
+            string licensePlateNumber = GetLicensePlateNumber();
             int numberOfWheels = 0;
             float[] wheelsAirPressure;
 
@@ -238,7 +235,7 @@ namespace Ex03.ConsoleUI
                 wheelsAirPressure = new float[numberOfWheels];
                 for (int i = 0; i < wheelsAirPressure.Length; i++)
                 {
-                    wheelsAirPressure[i] = this.r_FillAirToMaxCode;
+                    wheelsAirPressure[i] = this.r_FillAirToMax;
                 }
 
                 this.m_MyGarage.FillAirInWheels(licensePlateNumber, wheelsAirPressure);
@@ -255,13 +252,17 @@ namespace Ex03.ConsoleUI
 
         internal void GetVehicleDetails()
         {
-            string licensePlateNumber = getLicensePlateNumber();
+            string licensePlateNumber = GetLicensePlateNumber();
             string vehicleInfo;
 
             try
             {
                 vehicleInfo = this.m_MyGarage.GetVehicleDetails(licensePlateNumber);
                 Console.WriteLine(vehicleInfo);
+                Console.WriteLine();
+                Console.WriteLine("To go back to the main menu - press any key");
+                Console.ReadLine();
+                Console.Clear();
             }
             catch (VehicleNotInGarageException e)
             {
@@ -269,9 +270,9 @@ namespace Ex03.ConsoleUI
             }
         }
 
-        internal void ShowLicencePlatesInGarageByFilter()
+        internal void PrintLicencePlatesInGarageByFilter()
         {
-            bool[] filters = new bool[3];
+            bool[] filters = new bool[3]; //Each index represents a status in garage - 0: treatment, 1: fixed, 2:payed
             string filteredLicensePlates;
 
             ChatBot.ChooseFilters(ref filters);

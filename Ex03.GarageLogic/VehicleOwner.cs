@@ -34,8 +34,8 @@
         internal string toString()
         {
             string i_VehicleOwnerDetails = string.Format(@"Owner Name-  {0}
-                                                        Owner Phone Number- {1}"
-                                        , this.mr_Name, this.m_PhoneNumber);
+            Owner Phone Number- {1}"
+            , this.mr_Name, this.m_PhoneNumber);
             return i_VehicleOwnerDetails;
         }
     }

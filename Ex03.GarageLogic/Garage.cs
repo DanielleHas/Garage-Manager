@@ -42,25 +42,25 @@ namespace Ex03.GarageLogic
          */
         internal static Vehicle CreateVehicle(int i_VehicleType, string i_ModelName, string i_LicensePlateNumber, VehicleOwner i_Owner, bool i_IsFuelBased, Dictionary<string, string> i_ExtraFeatursDictionary)
         {
-            Vehicle io_NewVehicle = null;
+            Vehicle o_NewVehicle = null;
 
             switch ((eVehicleTypes)(i_VehicleType))
             {
                 case eVehicleTypes.Car:
-                    io_NewVehicle = new Car(i_ModelName, i_LicensePlateNumber, i_IsFuelBased, i_Owner, i_ExtraFeatursDictionary);
+                    o_NewVehicle = new Car(i_ModelName, i_LicensePlateNumber, i_IsFuelBased, i_Owner, i_ExtraFeatursDictionary);
                     break;
                 case eVehicleTypes.Motorcycle:
-                    io_NewVehicle = new Motorcycle(i_ModelName, i_LicensePlateNumber, i_IsFuelBased, i_Owner, i_ExtraFeatursDictionary);
+                    o_NewVehicle = new Motorcycle(i_ModelName, i_LicensePlateNumber, i_IsFuelBased, i_Owner, i_ExtraFeatursDictionary);
                     break;
                 case eVehicleTypes.Truck:
-                    io_NewVehicle = new Truck(i_ModelName, i_LicensePlateNumber, i_IsFuelBased, i_Owner, i_ExtraFeatursDictionary);
+                    o_NewVehicle = new Truck(i_ModelName, i_LicensePlateNumber, i_IsFuelBased, i_Owner, i_ExtraFeatursDictionary);
                     break;
             }
 
-            return io_NewVehicle;
+            return o_NewVehicle;
         }
 
-        private Vehicle setVehicle(string i_ModelName, string i_LicensePlateNumber, VehicleOwner vehicleOwner, bool i_IsFuelBased)
+        private Vehicle SetVehicle(string i_ModelName, string i_LicensePlateNumber, VehicleOwner vehicleOwner, bool i_IsFuelBased)
         {
             throw new NotImplementedException();
         }
@@ -96,32 +96,32 @@ namespace Ex03.GarageLogic
 
         public bool IsExistInGarage(string i_LicensePlateNumber)
         {
-            bool i_IsExist = true;
+            bool v_IsExist = true;
             if (SearchVehicle(i_LicensePlateNumber) == null)
             {
-                i_IsExist = false;
+                v_IsExist = false;
             }
-            return i_IsExist;
+            return v_IsExist;
         }
 
         private Vehicle SearchVehicle(string i_LicensePlateNumber)
         {
-            Vehicle io_FoundedVehicle = null;
-            if (this.m_TreatmentVehiclesInGarage.TryGetValue(i_LicensePlateNumber, out io_FoundedVehicle)) ;
-            else if (this.m_FixedVehiclesInGarage.TryGetValue(i_LicensePlateNumber, out io_FoundedVehicle)) ;
-            else if (this.m_PayedVehiclesInGarage.TryGetValue(i_LicensePlateNumber, out io_FoundedVehicle)) ;
-            return io_FoundedVehicle;
+            Vehicle o_FoundedVehicle = null;
+            if (this.m_TreatmentVehiclesInGarage.TryGetValue(i_LicensePlateNumber, out o_FoundedVehicle)) ;
+            else if (this.m_FixedVehiclesInGarage.TryGetValue(i_LicensePlateNumber, out o_FoundedVehicle)) ;
+            else if (this.m_PayedVehiclesInGarage.TryGetValue(i_LicensePlateNumber, out o_FoundedVehicle)) ;
+            return o_FoundedVehicle;
         }
 
         public void ChangeVehicleStatus(string i_LicensePlateNumber, eStatusInGarage i_DesiredVehicleStatus)
         {
-            Vehicle i_vehicleToChange = SearchVehicle(i_LicensePlateNumber);
-            if(i_vehicleToChange == null)
+            Vehicle vehicleToChange = SearchVehicle(i_LicensePlateNumber);
+            if(vehicleToChange == null)
             {
                 throw new VehicleNotInGarageException();
             }
-            RemoveVehicleFromCurStatusList(i_vehicleToChange);
-            AddVehicleToStatusList(i_vehicleToChange, i_DesiredVehicleStatus);
+            RemoveVehicleFromCurStatusList(vehicleToChange);
+            AddVehicleToStatusList(vehicleToChange, i_DesiredVehicleStatus);
         }
 
         private void RemoveVehicleFromCurStatusList(Vehicle i_VehicleToRemove)
@@ -163,7 +163,7 @@ namespace Ex03.GarageLogic
         public string GetVehicleDetails(string i_LicensePlateNumber)
         {
             Vehicle vehicle = SearchVehicle(i_LicensePlateNumber);
-            string io_VehicleDetails;
+            string o_VehicleDetails;
 
             if (vehicle == null)
             {
@@ -171,10 +171,10 @@ namespace Ex03.GarageLogic
             }
             else
             {
-                io_VehicleDetails = vehicle.ToString();
+                o_VehicleDetails = vehicle.ToString();
             }
 
-            return io_VehicleDetails;
+            return o_VehicleDetails;
         }
 
         /*
@@ -182,53 +182,47 @@ namespace Ex03.GarageLogic
          */
         private string GetVehiclesOfSameStatus(ref Dictionary<string, Vehicle> io_DictionaryOfVehiclesInStatus)
         {
-            StringBuilder i_VehiclesWithSameStatus = new StringBuilder();
+            StringBuilder vehiclesWithSameStatus = new StringBuilder();
 
             foreach (string i_LicensePlateNumber in io_DictionaryOfVehiclesInStatus.Keys)
             {
-                i_VehiclesWithSameStatus.Append(i_LicensePlateNumber + ", ");
+                vehiclesWithSameStatus.Append(i_LicensePlateNumber + ", ");
             }
 
-            //TODO
-            // if (i_VehiclesWithSameStatus.Length > 0)
-            //{
-              //  i_VehiclesWithSameStatus.Remove(i_VehiclesWithSameStatus.Length - 2, 2);
-            //}
+            vehiclesWithSameStatus.Append(System.Environment.NewLine);
 
-            i_VehiclesWithSameStatus.Append(System.Environment.NewLine);
-
-            return i_VehiclesWithSameStatus.ToString();
+            return vehiclesWithSameStatus.ToString();
         }
 
         /*
-         * Returns a string with the license plates in a given status.
          * Receives a boolean array of size 3 representing the states(Treatment, Fixed, Payed).  
+         * Returns a string with the license plates in a given status.
          */
         public string GetLicensePlatesByState(ref bool[] io_NecesseryStatuses)
         {
-            StringBuilder i_VehiclesByStatus = new StringBuilder();
+            StringBuilder vehiclesByStatus = new StringBuilder();
 
             for (int i = 0; i < io_NecesseryStatuses.Length; i++)
             {
                 if (io_NecesseryStatuses[i] == true)
                 {
-                    i_VehiclesByStatus.Append(((eStatusInGarage)(i + 1)).ToString() + "- ");
+                    vehiclesByStatus.Append(((eStatusInGarage)(i + 1)).ToString() + "- ");
                     switch (i + 1)
                     {
                         case 1:
-                            i_VehiclesByStatus.Append(GetVehiclesOfSameStatus(ref this.m_TreatmentVehiclesInGarage));
+                            vehiclesByStatus.Append(GetVehiclesOfSameStatus(ref this.m_TreatmentVehiclesInGarage));
                             break;
                         case 2:
-                            i_VehiclesByStatus.Append(GetVehiclesOfSameStatus(ref this.m_FixedVehiclesInGarage));
+                            vehiclesByStatus.Append(GetVehiclesOfSameStatus(ref this.m_FixedVehiclesInGarage));
                             break;
                         case 3:
-                            i_VehiclesByStatus.Append(GetVehiclesOfSameStatus(ref this.m_PayedVehiclesInGarage));
+                            vehiclesByStatus.Append(GetVehiclesOfSameStatus(ref this.m_PayedVehiclesInGarage));
                             break;
                     }
-                    i_VehiclesByStatus.Append(System.Environment.NewLine);
+                    vehiclesByStatus.Append(System.Environment.NewLine);
                 }
             }
-            return i_VehiclesByStatus.ToString();
+            return vehiclesByStatus.ToString();
         }
 
         public int GetNumOfWheelsInVehicle(string i_LicensePlateNumber)
@@ -278,26 +272,26 @@ namespace Ex03.GarageLogic
 
         public bool IsFuelBasedVehicle(string i_LicensePlateNumber)
         {
-            Vehicle i_VehiclesByStatus = SearchVehicle(i_LicensePlateNumber);
+            Vehicle vehiclesByStatus = SearchVehicle(i_LicensePlateNumber);
 
-            if (i_VehiclesByStatus == null)
+            if (vehiclesByStatus == null)
             {
                 return false;
             }
 
-            return i_VehiclesByStatus.IsFuelBased;
+            return vehiclesByStatus.IsFuelBased;
         }
 
         public eStatusInGarage GetStatusByLicensePlateNumber(string i_LicensePlateNumber)
         {
-            Vehicle i_Vehicle = SearchVehicle(i_LicensePlateNumber);
+            Vehicle vehicle = SearchVehicle(i_LicensePlateNumber);
 
-            if (i_Vehicle == null)
+            if (vehicle == null)
             {
                 throw new VehicleNotInGarageException();
             }
 
-            return i_Vehicle.Status;
+            return vehicle.Status;
         }
 
         /*
@@ -306,15 +300,15 @@ namespace Ex03.GarageLogic
          */
         public void FillEnergy(string i_LicensePlateNumber, float i_EnergyToFill, eFuelTypes i_FuelType)
         {
-            Vehicle i_VehicleToFill = SearchVehicle(i_LicensePlateNumber);
+            Vehicle vehicleToFill = SearchVehicle(i_LicensePlateNumber);
 
-            if (i_VehicleToFill == null)
+            if (vehicleToFill == null)
             {
                 throw new VehicleNotInGarageException();
             }
             else
             {
-                i_VehicleToFill.FillEnergy(i_EnergyToFill, i_FuelType);
+                vehicleToFill.FillEnergy(i_EnergyToFill, i_FuelType);
             }
         }
 
@@ -324,15 +318,15 @@ namespace Ex03.GarageLogic
          */
         public void FillEnergy(string i_LicensePlateNumber, float i_EnergyToFill)
         {
-            Vehicle i_VehicleToFill = SearchVehicle(i_LicensePlateNumber);
+            Vehicle vehicleToFill = SearchVehicle(i_LicensePlateNumber);
 
-            if (i_VehicleToFill == null)
+            if (vehicleToFill == null)
             {
                 throw new VehicleNotInGarageException();
             }
             else
             {
-                i_VehicleToFill.FillEnergy(i_EnergyToFill);
+                vehicleToFill.FillEnergy(i_EnergyToFill);
             }
         }
 

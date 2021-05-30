@@ -44,6 +44,7 @@ namespace Ex03.GarageLogic
         internal override void SetEnergy(float i_CurrentEnergy)
         {
             this.m_EnergyType = new Fuel(k_MaxCapacityOfFuel, i_CurrentEnergy, k_FuelType);
+            this.m_RemainingEnergyInPrecent = 1 - (i_CurrentEnergy / k_MaxCapacityOfFuel);
         }
 
         private void SetCarringWeight(string i_CarringWeight)
@@ -99,11 +100,10 @@ namespace Ex03.GarageLogic
                 dangerousMaterialsDetails = "Doesn't have dangeraus materials";
             }
             string io_TruckDetails = string.Format(@"
-                                                    {0}
-                                                    Current Carring Weight- {1}
-                                                    {2}
-"
-                                                        , base.ToString(), this.m_CarringWeight, dangerousMaterialsDetails);
+            {0}
+            Current Carring Weight- {1}
+            {2}"
+            , base.ToString(), this.m_CarringWeight, dangerousMaterialsDetails);
             return io_TruckDetails;
         }
     }

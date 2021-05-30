@@ -12,22 +12,21 @@ namespace Ex03.ConsoleUI
 
         internal void Run()
         {
-            ChatBot chatbot; //TODO 
-            int instructionNum = 0;
+            int instructionIndex = 0;
             this.m_Manager = new GarageManager();
 
             while (true)
             {
                 try
                 {
-                    instructionNum = ChatBot.GreetUser();
-                    switch (instructionNum)
+                    instructionIndex = ChatBot.GreetUser();
+                    switch (instructionIndex)
                     {
                         case 1:
                             this.m_Manager.AddNewVehicle();
                             break;
                         case 2:
-                            this.m_Manager.ShowLicencePlatesInGarageByFilter();
+                            this.m_Manager.PrintLicencePlatesInGarageByFilter();
                             break;
                         case 3:
                             this.m_Manager.ChangeVehicleStatus();

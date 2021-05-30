@@ -63,7 +63,7 @@ namespace Ex03.GarageLogic
 
         protected readonly string mr_ModelName;
         protected readonly string mr_LicensePlateNumber;
-        protected float m_RemainingEnergyPrecent;
+        protected float m_RemainingEnergyInPrecent;
         protected readonly bool mvr_IsFuelBased;
         protected Wheel[] m_Wheels;
         protected float m_MaxAirPressure;
@@ -77,7 +77,6 @@ namespace Ex03.GarageLogic
         {
             this.mr_ModelName = i_ModelName;
             this.mr_LicensePlateNumber = i_LicensePlateNumber;
-          //  this.m_RemainingEnergyPrecent = i_RemainingEnergyPrecent;
             this.m_Wheels = new Wheel[i_NumOfWheels];
             this.m_MaxAirPressure = i_MaxAirPressure;
             this.mvr_IsFuelBased = i_IsFuelBased;
@@ -185,31 +184,30 @@ namespace Ex03.GarageLogic
         */
         private string WheelsDetails()
         {
-            StringBuilder i_WheelsDetails = new StringBuilder();
-            int i_WheelIndex = 1;
+            StringBuilder wheelsDetails = new StringBuilder();
+            int wheelIndex = 1;
 
             foreach (Wheel wheel in this.m_Wheels)
             {
-                i_WheelsDetails.Append("Wheel number " + i_WheelIndex + "- " + System.Environment.NewLine);
-                i_WheelsDetails.Append(wheel.ToString());
-                i_WheelIndex++;
+                wheelsDetails.Append("Wheel number " + wheelIndex + "- " + System.Environment.NewLine);
+                wheelsDetails.Append(wheel.ToString());
+                wheelIndex++;
             }
 
-            return i_WheelsDetails.ToString();
+            return wheelsDetails.ToString();
         }
 
         internal virtual string ToString()
         {
-            StringBuilder i_VehicleDetails = new StringBuilder();
+            StringBuilder vehicleDetailsils = new StringBuilder();
+            vehicleDetailsils.Append("License plate number- " + this.mr_LicensePlateNumber + System.Environment.NewLine);
+            vehicleDetailsils.Append("Vehicle model- " + this.mr_ModelName + System.Environment.NewLine);
+            vehicleDetailsils.Append(this.m_VehicleOwner.toString() + System.Environment.NewLine);
+            vehicleDetailsils.Append("Wheels- " + System.Environment.NewLine);
+            vehicleDetailsils.Append(WheelsDetails());
+            vehicleDetailsils.Append(this.m_EnergyType.ToString());
 
-            i_VehicleDetails.Append("License plate number- " + this.mr_LicensePlateNumber + System.Environment.NewLine);
-            i_VehicleDetails.Append("Vehicle model- " + this.mr_ModelName + System.Environment.NewLine);
-            i_VehicleDetails.Append(this.m_VehicleOwner.toString() + System.Environment.NewLine);
-            i_VehicleDetails.Append("Wheels- " + System.Environment.NewLine);
-            i_VehicleDetails.Append(WheelsDetails());
-            i_VehicleDetails.Append(this.m_EnergyType.ToString());
-
-            return i_VehicleDetails.ToString();
+            return vehicleDetailsils.ToString();
         }
 
         

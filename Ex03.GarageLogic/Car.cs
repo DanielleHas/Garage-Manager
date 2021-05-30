@@ -34,14 +34,15 @@ namespace Ex03.GarageLogic
             {
                 SetNumOfDoors(o_Feature2Value);
             }
+
             if (i_IsFuelBased)
            {
                this.m_EnergyType = new Fuel(k_MaxCapacityOfFuel, 0, k_FuelType);
-           }
-           else
+            }
+            else
            {
                this.m_EnergyType = new Battery(k_MaxCapacityOfBattery, 0);
-           }
+            }
         }
 
         /*
@@ -52,10 +53,12 @@ namespace Ex03.GarageLogic
             if (this.IsFuelBased)
             {
                 this.m_EnergyType = new Fuel(k_MaxCapacityOfFuel, i_CurrentEnergy, k_FuelType);
+                this.m_RemainingEnergyInPrecent = 1 - (i_CurrentEnergy / k_MaxCapacityOfFuel);
             }
             else
             {
                 this.m_EnergyType = new Battery(k_MaxCapacityOfBattery, i_CurrentEnergy);
+                this.m_RemainingEnergyInPrecent = 1 - (i_CurrentEnergy / k_MaxCapacityOfBattery);
             }
         }
 
@@ -108,10 +111,10 @@ namespace Ex03.GarageLogic
         internal override string ToString()
         {
             string carDetails = string.Format(@"
-                                {0}
-                                Color- {1}
-                                Number Of Doors- {2}"
-                                                 , base.ToString(), this.m_Color.ToString(), this.m_NumOfDoors.ToString());
+            {0}
+            Color- {1}
+            Number Of Doors- {2}"
+            , base.ToString(), this.m_Color.ToString(), this.m_NumOfDoors.ToString());
             return carDetails;
         }
     }

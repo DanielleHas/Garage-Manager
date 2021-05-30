@@ -51,10 +51,12 @@ namespace Ex03.GarageLogic
             if (this.IsFuelBased)
             {
                 this.m_EnergyType = new Fuel(k_MaxCapacityOfFuel, i_CurrentEnergy, k_FuelType);
+                this.m_RemainingEnergyInPrecent = 1 - (i_CurrentEnergy / k_MaxCapacityOfFuel);
             }
             else
             {
                 this.m_EnergyType = new Battery(k_MaxCapacityOfBattery, i_CurrentEnergy);
+                this.m_RemainingEnergyInPrecent = 1 - (i_CurrentEnergy / k_MaxCapacityOfBattery);
             }
         }
 
@@ -110,10 +112,11 @@ namespace Ex03.GarageLogic
 
         internal override string ToString()
         {
-            string io_CarDetails = string.Format(@"{0}
-                                                   License Type - {1}
-                                                   Energy Capacity- {2}"
-                                                 , base.ToString(), this.m_LicensType.ToString(), this.m_EnergyCapacity.ToString());
+            string io_CarDetails = string.Format(@"
+            {0}
+            License Type - {1}
+            Energy Capacity- {2}"
+            , base.ToString(), this.m_LicensType.ToString(), this.m_EnergyCapacity.ToString());
             return io_CarDetails;
         }
     }

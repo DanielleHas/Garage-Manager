@@ -42,10 +42,11 @@ namespace Ex03.GarageLogic
 
         internal virtual string ToString()
         {
-            string i_EnergyDetails = string.Format(@"Max capacity-  {0}
-                                                        Current amount- {1}
-                                                        Precentage- {2}"
-                                                        , this.mr_MaxCapacity, this.m_CurrentAmount , this.m_FullPrecentage);
+            string i_EnergyDetails = string.Format(@"
+            Max capacity-  {0}
+            Current amount- {1}
+            Precentage- {2}"
+            , this.mr_MaxCapacity, this.m_CurrentAmount , this.m_FullPrecentage);
             return i_EnergyDetails;
         }
     }

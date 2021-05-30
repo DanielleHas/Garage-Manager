@@ -11,21 +11,19 @@ namespace Ex03.ConsoleUI
     {
         internal static int GreetUser()
         {
-
             Console.WriteLine("Hello! welcome to the Garage!");
             Console.WriteLine("You can preform the following operatins on your garage" + System.Environment.NewLine);
 
-            int instruction = 0;
+            int o_InstructionIndex = 0;
             Console.WriteLine("What whould you like to do?");
             PrintInstructionOptions();
-            if (!int.TryParse(getInputFromUser(), out instruction) || instruction > 7 || instruction < 1)
+            if (!int.TryParse(GetInputFromUser(), out o_InstructionIndex) || o_InstructionIndex > 7 || o_InstructionIndex < 1)
             {
                 throw new FormatException("Bad instructions input");
             }
 
             Console.Clear();
-
-            return instruction;
+            return o_InstructionIndex;
         }
 
         private static void PrintInstructionOptions()
@@ -43,22 +41,20 @@ namespace Ex03.ConsoleUI
         internal static void GetOwnerName(out string o_Name)
         {
             Console.WriteLine("Please enter the owner's name");
-            o_Name = getInputFromUser();
+            o_Name = GetInputFromUser();
         }
 
         internal static void GetOwnerPhoneNumber(string i_Name, out string o_PhoneNumber)
         {
             Console.WriteLine(string.Format("Please enter {0}'s phone number (10 digit number without punctuations)", i_Name));
-            o_PhoneNumber = getInputFromUser();
-            try {
-                parsePhoneNumber(o_PhoneNumber, out string error);
-            } catch(Exception e)
+            o_PhoneNumber = GetInputFromUser();
+            if(!ParsePhoneNumber(o_PhoneNumber, out string error))
             {
-                Console.WriteLine(e);
+                throw new FormatException(error);
             }
         }
 
-        private static bool parsePhoneNumber(string i_PhoneNumber, out string o_Error)
+        private static bool ParsePhoneNumber(string i_PhoneNumber, out string o_Error)
         {
             o_Error = null;
             bool successParsing = true;
@@ -83,30 +79,30 @@ namespace Ex03.ConsoleUI
 
         internal static void GetVehicleGeneralDetails()
         {
-            char isElectricOrFuel = 'F';
+            char isElecctricOrFuel = 'F';
 
             Console.Clear();
             Console.WriteLine("Please provide the car details:");
             Console.WriteLine();
-            int o_VehicleType = getVehicleType();
+            int o_VehicleType = GetVehicleType();
             Console.WriteLine(string.Format("What is the {0}'s model?", (eVehicleTypes)o_VehicleType));
-            string o_ModelName = getInputFromUser();
-            char electricOrFuel = ' '; // temp variable
-            if (o_VehicleType != 2) //isn't a truck
+            string o_ModelName = GetInputFromUser();
+            char electricOrFuel = ' '; // temp variable - E for electric, F for fuel
+            if (o_VehicleType != 3) //isn't a truck
             {
-                Console.WriteLine(string.Format("Is the {0} electric? (press E for electric based and f for fuel based)", (eVehicleTypes)o_VehicleType));
-                electricOrFuel = getInputFromUser()[0];
-                while (electricOrFuel != 'F' && electricOrFuel != 'f' && electricOrFuel != 'E' && electricOrFuel != 'e')
+                Console.WriteLine(string.Format("Does vehicle {0} electric or fuel based? (press E for electric based and f for fuel based)", (eVehicleTypes)o_VehicleType));
+                electricOrFuel = GetInputFromUser()[0];
+                while (Char.ToUpper(electricOrFuel) != 'F' && Char.ToUpper(electricOrFuel) != 'E')
                 {
                     Console.Clear();
                     Console.WriteLine("Please choose E for electric and F for fuled");
-                    electricOrFuel = getInputFromUser()[0];
+                    electricOrFuel = GetInputFromUser()[0];
                 }
             }
 
-            if (electricOrFuel == 'E' || electricOrFuel == 'e')
+            if (Char.ToUpper(electricOrFuel) == 'E')
             {
-                isElectricOrFuel = 'E';
+                isElecctricOrFuel = 'E';
             }
 
             string o_LicensePlateNumber = GetLicensePlateNumber();
@@ -129,23 +125,34 @@ namespace Ex03.ConsoleUI
 
             Console.Clear();
             Console.WriteLine("Let's get some details about the vehicle.");
-            o_VehicleType = getVehicleType();
+            o_VehicleType = GetVehicleType();
             Console.WriteLine(string.Format("What is the {0}'s model?", (eVehicleTypes)o_VehicleType));
-            o_ModelName = getInputFromUser();
+            o_ModelName = GetInputFromUser();
             if (o_VehicleType != 3)
             {
                 Console.WriteLine(string.Format("Is the {0} electric? Please choose E for electric and F for fuled", (eVehicleTypes)o_VehicleType));
-                isElectricOrFuel = getInputFromUser()[0];
+                isElectricOrFuel = GetInputFromUser()[0];
                 while (isElectricOrFuel != 'F' && isElectricOrFuel != 'f' && isElectricOrFuel != 'E' && isElectricOrFuel != 'e')
                 {
                     Console.Clear();
                     Console.WriteLine("Please choose E for electric and F for fuled");
-                    isElectricOrFuel = getInputFromUser()[0];
+                    isElectricOrFuel = GetInputFromUser()[0];
                 }
             }
 
             o_IsElectric = isElectricOrFuel;
             o_LicensePlateNumber = GetLicensePlateNumber();
+        }
+
+        internal static string GetLicensePlateNumber()
+        {
+            Console.WriteLine("Please enter the license plate number of the vehicle ");
+            string licensPlateNumber = GetInputFromUser();
+            if (!ParseLicensePlateNumber(licensPlateNumber, out string error))
+            {
+                throw new FormatException(error);
+            }
+            return licensPlateNumber;
         }
 
         internal static Dictionary<string, string> GetExtraFeatures(int i_VehicleType)
@@ -154,29 +161,29 @@ namespace Ex03.ConsoleUI
             switch (i_VehicleType)
             {
                 case 1: // car
-                    o_ExtraFeatursDictionary.Add("Color", getColor());
-                    o_ExtraFeatursDictionary.Add("Number of doors", getNumOfDoors());
+                    o_ExtraFeatursDictionary.Add("Color", GetColor());
+                    o_ExtraFeatursDictionary.Add("Number of doors", GetNumOfDoors());
                     break;
                 case 2: //motorcycle
-                    o_ExtraFeatursDictionary.Add("Licens type", getLicensType());
-                    o_ExtraFeatursDictionary.Add("Energy capacity", getEnergyCapacity());
+                    o_ExtraFeatursDictionary.Add("Licens type", GetLicensType());
+                    o_ExtraFeatursDictionary.Add("Energy capacity", GetEnergyCapacity());
                     break;
                 case 3: //Truck
-                    o_ExtraFeatursDictionary.Add("Has dangerous materials", getHasDangerousMaterials());
-                    o_ExtraFeatursDictionary.Add("Maximum carring weight", getMaximumCarringWeight());
+                    o_ExtraFeatursDictionary.Add("Has dangerous materials", GetHasDangerousMaterials());
+                    o_ExtraFeatursDictionary.Add("Maximum carring weight", GetMaximumCarringWeight());
                     break;
             }
             return o_ExtraFeatursDictionary;
         }
 
-        private static string getMaximumCarringWeight()
+        private static string GetMaximumCarringWeight()
         {
             bool v_ValidCarringWeight = false;
             string carringWeightAsString = "";
             Console.WriteLine("Please enter the Maximum Carring Weight - ");
             while (!v_ValidCarringWeight)
             {
-                carringWeightAsString = getInputFromUser();
+                carringWeightAsString = GetInputFromUser();
                 float o_CarringWeightAsFloat;
                 bool isSucceed = float.TryParse(carringWeightAsString, out o_CarringWeightAsFloat);
                 if (!isSucceed)
@@ -191,14 +198,14 @@ namespace Ex03.ConsoleUI
             return carringWeightAsString;
         }
 
-        private static string getHasDangerousMaterials()
+        private static string GetHasDangerousMaterials()
         {
             bool v_ValidInput = false;
             string inputAsString = "";
             Console.WriteLine("Do you carry dangeraus materials? (Y / N) - ");
             while (!v_ValidInput)
             {
-                inputAsString = getInputFromUser();
+                inputAsString = GetInputFromUser();
                 if (inputAsString.ToUpper() != "Y" && inputAsString.ToUpper() != "N")
                 {
                     Console.WriteLine("Invalid input. Please enter again:");
@@ -212,14 +219,14 @@ namespace Ex03.ConsoleUI
             return inputAsString;
         }
 
-        private static string getEnergyCapacity()
+        private static string GetEnergyCapacity()
         {
             bool v_ValidEnergyCapacity = false;
             string energyCapacityAsString = "";
             Console.WriteLine("Please enter the energy capacity - ");
             while (!v_ValidEnergyCapacity)
             {
-                energyCapacityAsString = getInputFromUser();
+                energyCapacityAsString = GetInputFromUser();
                 int o_EnergyCapacityAsInt;
                 bool isSucceed = Int32.TryParse(energyCapacityAsString, out o_EnergyCapacityAsInt);
                 if (!isSucceed)
@@ -234,7 +241,7 @@ namespace Ex03.ConsoleUI
             return energyCapacityAsString;
         }
 
-        private static string getLicensType()
+        private static string GetLicensType()
         {
             bool v_ValidLicenseType = false;
             int licensTypeIndex = 1;
@@ -246,7 +253,7 @@ namespace Ex03.ConsoleUI
                              [2] - B1
                              [3] - AA
                              [4] - BB"));
-                string licensTypeAsString = getInputFromUser();
+                string licensTypeAsString = GetInputFromUser();
                 licensTypeIndex = Int32.Parse(licensTypeAsString);
                 if (licensTypeIndex < 1 || licensTypeIndex > 4)
                 {
@@ -260,7 +267,7 @@ namespace Ex03.ConsoleUI
             return ((eLicensTypes)(licensTypeIndex)).ToString();
         }
 
-        private static string getNumOfDoors()
+        private static string GetNumOfDoors()
         {
             bool v_ValidDoorsNumber = false;
             int doorsNumber = 2;
@@ -272,7 +279,7 @@ namespace Ex03.ConsoleUI
                              [3] - 3
                              [4] - 4
                              [5] - 5"));
-                string doorsNumberAsString = getInputFromUser();
+                string doorsNumberAsString = GetInputFromUser();
                 doorsNumber = Int32.Parse(doorsNumberAsString);
                 if (doorsNumber < 2 || doorsNumber > 5)
                 {
@@ -286,19 +293,19 @@ namespace Ex03.ConsoleUI
             return ((eNumsOfDoors)(doorsNumber)).ToString();
         }
 
-        private static string getColor()
+        private static string GetColor()
         {
             bool v_ValidColor = false;
             int colorIndex = 1;
             Console.WriteLine("Please enter your car color plate number of the car - ");
-            while(!v_ValidColor)
+            while (!v_ValidColor)
             {
                 Console.WriteLine(string.Format(@" 
                              [1] - Red
                              [2] - Silver
                              [3] - White
                              [4] - Black"));
-                string colorAsNumber = getInputFromUser();
+                string colorAsNumber = GetInputFromUser();
                 colorIndex = Int32.Parse(colorAsNumber);
                 if (colorIndex < 1 || colorIndex > 4)
                 {
@@ -309,18 +316,7 @@ namespace Ex03.ConsoleUI
                     v_ValidColor = true;
                 }
             }
-            return ((eColors)(colorIndex)).ToString();            
-        }
-
-        internal static string GetLicensePlateNumber()
-        {
-            Console.WriteLine("Please enter the license plate number of the vehicle ");
-            string licensPlateNumber = getInputFromUser();
-            if (!ParseLicensePlateNumber(licensPlateNumber, out string error))
-            {
-                throw new FormatException(error);
-            }
-            return licensPlateNumber;
+            return ((eColors)(colorIndex)).ToString();
         }
 
         internal static void PrintLicensePlateNotFoundMessage(string i_LicensePlateNumber)
@@ -342,7 +338,7 @@ namespace Ex03.ConsoleUI
             return successParsing;
         }
 
-        private static int getVehicleType()
+        private static int GetVehicleType()
         {
             string vehicleTypeCode;
             int vehicleTypeNumber = 0;
@@ -350,12 +346,12 @@ namespace Ex03.ConsoleUI
 
             Console.WriteLine("What type of vehicle are you registering?");
             PrintVehicleTypesOptions();
-            vehicleTypeCode = getInputFromUser();
+            vehicleTypeCode = GetInputFromUser();
             while (!eVehicleTypes.TryParse(vehicleTypeCode, out vehicleType))
             {
                 Console.WriteLine("Invalid input. Try again");
                 PrintVehicleTypesOptions();
-                vehicleTypeCode = getInputFromUser();
+                vehicleTypeCode = GetInputFromUser();
             }
 
             vehicleTypeNumber = int.Parse(vehicleTypeCode);
@@ -370,31 +366,31 @@ namespace Ex03.ConsoleUI
                              [2] - Motorcycle
                              [3] - Truck"));
         }
-        internal static float GetBatteryCurrentStatus(string i_LicensePlateNumber)
+        internal static float GetBatteryCurStatus(string i_LicensePlateNumber)
         {
-            float currentBatteryChargeInHours = 0;
+            float curBatteryCharge = 0; //in hours
 
             Console.WriteLine(string.Format("What is the current battery charge of vehicle number {0}? (in hours)", i_LicensePlateNumber));
-            while (!float.TryParse(getInputFromUser(), out currentBatteryChargeInHours))
+            while (!float.TryParse(GetInputFromUser(), out curBatteryCharge))
             {
                 Console.WriteLine("Invalid input. Please enter the battery charge (in hours).");
             }
 
-            return currentBatteryChargeInHours;
+            return curBatteryCharge;
         }
 
-        internal static float GetFuelTankCurrentStatus(string i_LicensePlateNumber)
+        internal static float GetFuelCurStatus(string i_LicensePlateNumber)
         {
-            float currentFuleTankStatusInLiters = 0;
+            float curFuleTankAmount = 0; //in liters
 
             Console.WriteLine(string.Format("What is the current tank status of vehicle {0}? (in liters)", i_LicensePlateNumber));
-            while (!float.TryParse(getInputFromUser(), out currentFuleTankStatusInLiters))
+            while (!float.TryParse(GetInputFromUser(), out curFuleTankAmount))
             {
                 Console.Clear();
                 Console.WriteLine("Invalid input. Please enter the tank status (in liters) again.");
             }
 
-            return currentFuleTankStatusInLiters;
+            return curFuleTankAmount;
         }
 
         internal static float GetChargingDetails(string i_LicensePlateNumber)
@@ -402,7 +398,7 @@ namespace Ex03.ConsoleUI
             float chargeAmmount = 0;
 
             Console.WriteLine(string.Format("How much time do you want to charge vehicle {0}? (in hours)", i_LicensePlateNumber));
-            while (!float.TryParse(getInputFromUser(), out chargeAmmount))
+            while (!float.TryParse(GetInputFromUser(), out chargeAmmount))
             {
                 Console.Clear();
                 Console.WriteLine("Invalid input. Please enter the wanted charge time (in hours) again.");
@@ -417,7 +413,7 @@ namespace Ex03.ConsoleUI
 
             o_FuelType = GetFuelType();
             Console.WriteLine(string.Format("How many liters do you want to fuel into vehicle {0} with?", i_LicensePlateNumber));
-            while (!float.TryParse(getInputFromUser(), out fuelAmount))
+            while (!float.TryParse(GetInputFromUser(), out fuelAmount))
             {
                 Console.Clear();
                 Console.WriteLine("Invalid input. Please enter the wanted fuel amount (in liters) again.");
@@ -433,7 +429,7 @@ namespace Ex03.ConsoleUI
 
             Console.WriteLine("What is the fuel type that you whould like to use?");
             PrintFuelTypeOptions();
-            fuelType = getInputFromUser();
+            fuelType = GetInputFromUser();
             while (!int.TryParse(fuelType, out fuelTypeCode) || fuelTypeCode < 1 || fuelTypeCode > 4)
             {
                 throw new FormatException("Bad fuel type input.");
@@ -454,38 +450,38 @@ namespace Ex03.ConsoleUI
         {
             Console.Clear();
             Console.WriteLine(string.Format("What is the manufacturer's name for the wheels of vehicle {0}?", i_LicensePlateNumber));
-            o_ManufacturerName = getInputFromUser();
+            o_ManufacturerName = GetInputFromUser();
         }
 
-        internal static float GetCurrentAirPressure(string i_LicensePlateNumber)
+        internal static float GetCurAirPressure(string i_LicensePlateNumber)
         {
-            float currenAirPressure = 0;
+            float curAirPressure = 0;
 
             Console.WriteLine(string.Format("What is the air pressure of the wheels in vehicle number {0}?", i_LicensePlateNumber));
-            while (!float.TryParse(getInputFromUser(), out currenAirPressure))
+            while (!float.TryParse(GetInputFromUser(), out curAirPressure))
             {
                 Console.Clear();
                 Console.WriteLine("Invalid input. Please enter the current air pressure again.");
             }
 
-            return currenAirPressure;
+            return curAirPressure;
         }
 
         internal static void ChooseFilters(ref bool[] io_FilterChart)
         {
             char userAnswer;
-            eStatusInGarage[] states = { eStatusInGarage.Treatment, eStatusInGarage.Fixed, eStatusInGarage.Payed };
+            eStatusInGarage[] statuses = { eStatusInGarage.Treatment, eStatusInGarage.Fixed, eStatusInGarage.Payed };
 
             Console.Clear();
-            for (int i = 0; i < states.Length; i++)
+            for (int i = 0; i < statuses.Length; i++)
             {
-                Console.WriteLine(string.Format("Would you like to see a list of the {0} cars? Y\\N", states[i]));
-                userAnswer = getInputFromUser()[0];
+                Console.WriteLine(string.Format("Would you like to see a list of the {0} cars? Y\\N", statuses[i]));
+                userAnswer = GetInputFromUser()[0];
                 while (userAnswer != 'Y' && userAnswer != 'N' && userAnswer != 'n' && userAnswer != 'y')
                 {
-                    Console.WriteLine(string.Format("Invalid input. Please enter 'Y' if you would like to see {0}, and 'N' if you would't", states[i]));
-                    Console.WriteLine(string.Format("Would you like to see a list of the {0} cars? Y\\N", states[i]));
-                    userAnswer = getInputFromUser()[0];
+                    Console.WriteLine(string.Format("Invalid input. Please enter 'Y' if you would like to see {0}, and 'N' if you would't", statuses[i]));
+                    Console.WriteLine(string.Format("Would you like to see a list of the {0} cars? Y\\N", statuses[i]));
+                    userAnswer = GetInputFromUser()[0];
                 }
 
                 io_FilterChart[i] = (userAnswer == 'Y' || userAnswer == 'y');
@@ -500,12 +496,12 @@ namespace Ex03.ConsoleUI
             Console.Clear();
             Console.WriteLine(string.Format("What is the new status of vehicle {0}", i_LicensePlateNumber));
             PrintStatusOptions();
-            newStatus = getInputFromUser();
+            newStatus = GetInputFromUser();
             while (!int.TryParse(newStatus, out newStatusCode) || newStatusCode < 1 || newStatusCode > 3)
             {
                 Console.WriteLine("Invalid input. Please select the number corresponding to the chosen option:");
                 PrintStatusOptions();
-                newStatus = getInputFromUser();
+                newStatus = GetInputFromUser();
                 int.TryParse(newStatus, out newStatusCode);
             }
 
@@ -527,7 +523,7 @@ namespace Ex03.ConsoleUI
             Console.WriteLine(string.Format("The fuel type {0} does not match this vehicle type. Try again", i_FuelType));
         }
 
-        private static string getInputFromUser()
+        private static string GetInputFromUser()
         {
             string input = Console.ReadLine();
 
